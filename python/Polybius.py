@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import re, random
+import random
 
 def rand(min, max):
     return int((max - min) * random.random() + min)
