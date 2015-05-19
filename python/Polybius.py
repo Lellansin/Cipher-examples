@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import re, random
 
-def randomInt(min, max):
+def rand(min, max):
     return int((max - min) * random.random() + min)
 
 # 
@@ -13,9 +13,8 @@ def generate_table():
 
     for y in range(5):
         for x in range(5):
-            table[x][y] = alphabet[randomInt(0, len(alphabet))]
+            table[x][y] = alphabet[rand(0, len(alphabet))]
             alphabet = alphabet.replace(table[x][y], '')
-
     return table
 
 def getStr(x, format='%02s'):
@@ -37,11 +36,11 @@ def encode(table, words):
     cipher = ''
 
     for ch in words.upper():
-        for i in range(len(table)):
-            if ch in table[i]:
-                ox = str((table[i].index(ch) + 1))
-                oy = str(i + 1)
-                cipher += oy + ox
+        for row in range(len(table)):
+            if ch in table[row]:
+                x = str((table[row].index(ch) + 1))
+                y = str(row + 1)
+                cipher += y + x
     return cipher
 
 # 
@@ -50,11 +49,10 @@ def encode(table, words):
 def decode(table, numbers):
     text = ''
     for index in range(0, len(numbers), 2):
-        oy = int(numbers[index]) - 1
-        ox = int(numbers[index + 1]) - 1
-        text += table[oy][ox]
+        y = int(numbers[index]) - 1
+        x = int(numbers[index + 1]) - 1
+        text += table[y][x]
     return text
-
 
 if __name__ == '__main__':
     # 随机生成棋盘
