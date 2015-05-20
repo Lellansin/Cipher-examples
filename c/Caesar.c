@@ -1,11 +1,10 @@
 /*
  * Caesar Cipher
  *
- * @fileoverview 凯撒密码
- *
  * @author  lellansin <lellansin@gmail.com>
  * @website http://www.lellansin.com/tutorials/ciphers
  */
+
 #include <stdio.h>
 #include <ctype.h>
 

@@ -1,8 +1,6 @@
 /*
  * Polybius Cipher
  *
- * @fileoverview 棋盘密码
- *
  * @author  lellansin <lellansin@gmail.com>
  * @website http://www.lellansin.com/tutorials/ciphers
  */
