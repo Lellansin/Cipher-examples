@@ -56,7 +56,7 @@ char * generateTable()
 /*
  * 加密
  */
-char * encode(char *table, char *words, enum TEXT_TYPE type)
+char * encrypt(char *table, char *words, enum TEXT_TYPE type)
 {
     char *ciphertext, *format;
     int *arr, i, index;
@@ -100,7 +100,7 @@ char * encode(char *table, char *words, enum TEXT_TYPE type)
 /*
  * 解密
  */
-char * decode(char *table, char *numbers)
+char * decrypt(char *table, char *numbers)
 {
     char *result, *tmpstr, tmpch, *p;
     int len = strlen(numbers), count = 0;
@@ -148,21 +148,21 @@ int main(int argc, char const *argv[])
     printTable(table);
 
     printf("棋盘加密1\n");
-    ciphertext1 = encode(table, text1, WITH_BLANK);
+    ciphertext1 = encrypt(table, text1, WITH_BLANK);
     printf("原文 %s\n", text1);
     printf("密文 %s\n", ciphertext1);
 
     printf("根据棋盘解密\n");
-    parsetext1 = decode(table, ciphertext1);
+    parsetext1 = decrypt(table, ciphertext1);
     printf("结果 %s\n", parsetext1);
 
     printf("\n棋盘加密2\n");
-    ciphertext2 = encode(table, text2, NO_BLANK);
+    ciphertext2 = encrypt(table, text2, NO_BLANK);
     printf("原文 %s\n", text2);
     printf("密文 %s\n", ciphertext2);
 
     printf("根据棋盘解密\n");
-    parsetext2 = decode(table, ciphertext2);
+    parsetext2 = decrypt(table, ciphertext2);
     printf("结果 %s\n", parsetext2);
 
     free(table);

@@ -37,7 +37,7 @@ def print_table(table):
 # 
 # 加密
 # 
-def encode(table, words):
+def encrypt(table, words):
     string = table
     cipher = ''
 
@@ -52,7 +52,7 @@ def encode(table, words):
 # 
 # 解密
 # 
-def decode(table, numbers):
+def decrypt(table, numbers):
     text = ''
     for index in range(0, len(numbers), 2):
         y = int(numbers[index]) - 1
@@ -67,8 +67,8 @@ if __name__ == '__main__':
     print_table(table)
     
     # 使用棋盘加密字符串
-    ciphertext = encode(table, "hello, world")
+    ciphertext = encrypt(table, "hello, world")
     # 输出密文
     print(ciphertext)
     # 解密字符串
-    print(decode(table, ciphertext))
+    print(decrypt(table, ciphertext))
