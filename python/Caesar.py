@@ -12,9 +12,9 @@ Z = ord('Z')
 
 def getAsc(asc):
     if asc > Z:
-        return (asc - Z) / 26 + A
+        return (asc - Z) % 26 - 1 + A
     elif asc < A:
-        return (A - asc) / 26 + A
+        return Z - ((A - asc) % 26 - 1)
     else:
         return asc
 
@@ -26,6 +26,7 @@ def caesar(words, shift):
 
 if __name__ == '__main__':
     text = 'hello world, this is Caesar cipher.'
+    # text = 'abcdefghijklmnopqrstuvwxyz'
 
     # 右移
     ciphertext = caesar(text, 3);
