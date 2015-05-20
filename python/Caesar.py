@@ -6,6 +6,12 @@
 # @website http://www.lellansin.com/tutorials/ciphers
 #
 
+def caesar(words, shift):
+    cipher = ''
+    for ch in words.upper():
+        cipher += getShiftCh(ch, shift)
+    return cipher.lower()
+
 def getShiftCh(ch, shift):
     if str.isalpha(str(ch)):
         asc = ord(ch) + shift;
@@ -17,15 +23,6 @@ def getShiftCh(ch, shift):
         return unichr(new_ch)
     else:
         return ch
-
-# 
-# 凯撒密码
-# 
-def caesar(words, shift):
-    cipher = ''
-    for ch in words.upper():
-        cipher += getShiftCh(ch, shift)
-    return cipher.lower()
 
 if __name__ == '__main__':
     text = 'hello world, this is Caesar cipher.'
