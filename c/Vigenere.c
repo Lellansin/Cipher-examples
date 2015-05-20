@@ -10,14 +10,12 @@
 #include <string.h>
 
 #define A 65
-#define TABLEWIDTH 26
+#define TABLE_WIDTH 26
 
-char table[TABLEWIDTH][TABLEWIDTH];
+char table[TABLE_WIDTH][TABLE_WIDTH];
 
 int initTable();
 int printTable();
-int encode(char* key, char* src, char* dest);
-int dncode(char* key, char* src, char* dest);
 
 /*
  * 加密
@@ -26,7 +24,7 @@ int dncode(char* key, char* src, char* dest);
  * @param src    待加密的字符串
  * @param dest   经过加密后的字符串
  */
-int encode(char* key, char* src, char* dest)
+int encrypt(char* key, char* src, char* dest)
 {
 	char *pSrc = src;
 	char *pKey = key;
@@ -54,7 +52,7 @@ int encode(char* key, char* src, char* dest)
  * @param src    待解密的字符串
  * @param dest   经过解密后的字符串
  */
-int dncode(char* key, char* src, char* dest)
+int decrypt(char* key, char* src, char* dest)
 {	char *pSrc = src;
 	char *pKey = key;
 	char *pDest = dest;
@@ -62,7 +60,7 @@ int dncode(char* key, char* src, char* dest)
 
 	do {
 		offset = (*pSrc) - toupper(*pKey);
-		offset = offset >= 0 ? offset : offset + TABLEWIDTH;
+		offset = offset >= 0 ? offset : offset + TABLE_WIDTH;
 		*pDest++ = tolower(A + offset);
 
 		if (!(*(++pKey)))
@@ -86,11 +84,11 @@ int main()
 	printTable();
 
 	// 根据密匙加密
-	encode(secret, text, ciphertext);
+	encrypt(secret, text, ciphertext);
 	printf("密文 [%s]\n", ciphertext);
 
 	// 根据密匙解密
-	dncode(secret, ciphertext, output);
+	decrypt(secret, ciphertext, output);
 	printf("解密 [%s]\n", output);
 
 	return 0;
@@ -102,9 +100,9 @@ int main()
 int initTable()
 {
 	int i, j;
-	for (i = 0; i < TABLEWIDTH; i++)   {
-		for (j = 0; j < TABLEWIDTH; j++)    {
-			table[i][j] = A + (i + j) % TABLEWIDTH;
+	for (i = 0; i < TABLE_WIDTH; i++)   {
+		for (j = 0; j < TABLE_WIDTH; j++)    {
+			table[i][j] = A + (i + j) % TABLE_WIDTH;
 		}
 	}
 	return 1;
@@ -113,8 +111,8 @@ int initTable()
 int printTable()
 {
 	int i, j;
-	for (i = 0; i < TABLEWIDTH; i++)   {
-		for (j = 0; j < TABLEWIDTH; j++)    {
+	for (i = 0; i < TABLE_WIDTH; i++)   {
+		for (j = 0; j < TABLE_WIDTH; j++)    {
 			printf("%c ", table[i][j]);
 		}
 		printf("\n");
