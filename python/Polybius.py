@@ -1,4 +1,10 @@
 # -*- coding: utf-8 -*-
+#
+# Polybius Cipher
+# 
+# @author  lellansin <lellansin@gmail.com>
+# @website http://www.lellansin.com/tutorials/ciphers
+#
 import random
 
 def rand(min, max):
@@ -61,7 +67,7 @@ if __name__ == '__main__':
     print_table(table)
     
     # 使用棋盘加密字符串
-    ciphertext = encode(table, "hello world")
+    ciphertext = encode(table, "hello, world")
     # 输出密文
     print(ciphertext)
     # 解密字符串
