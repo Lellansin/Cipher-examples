@@ -8,19 +8,19 @@
 
 def caesar(words, shift):
     cipher = ''
-    for ch in words.upper():
+    for ch in words.lower():
         cipher += getShiftCh(ch, shift)
-    return cipher.lower()
+    return cipher
 
 def getShiftCh(ch, shift):
     if str.isalpha(str(ch)):
-        asc = ord(ch) + shift;
-        new_ch = asc
-        if asc > ord('Z'):
-            new_ch = (asc - ord('Z')) % 26 - 1 + ord('A')
-        elif asc < ord('A'):
-            new_ch = ord('Z') - ((ord('A') - asc) % 26 - 1)
-        return unichr(new_ch)
+        A, Z = ord('a'), ord('z')
+        result = dif = ord(ch) + shift
+        if dif > Z:
+            result = (dif - Z) % 26 - 1 + A
+        elif dif < A:
+            result = Z - ((A - dif) % 26 - 1)
+        return unichr(result)
     else:
         return ch
 
