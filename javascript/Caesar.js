@@ -11,7 +11,7 @@
         z: 'z'.charCodeAt(),
     };
 
-    var caesar = function(words, shift) {
+    function caesar(words, shift) {
         return words.toLowerCase().replace(/\w/g, function(ch) {
             return getShiftCh(ch, shift);
         });
@@ -28,7 +28,7 @@
         return String.fromCharCode(new_ch);
     };
 
-    /* -------------------- 测试 --------------------- */
+    /* -------------------- 测试 -------------------- */
 
     var text = 'hello world, this is Caesar cipher.';
     var shift = 3;

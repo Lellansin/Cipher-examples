@@ -7,7 +7,6 @@
 (function() {
 
     var Vigenere = {};
-    var table = [];
 
     var TABLE_WIDTH = 26;
     var ASCII = {
@@ -18,6 +17,8 @@
      * 生成密表
      */
     Vigenere.initTable = function() {
+        var table = [];
+
         for (var i = 0; i < TABLE_WIDTH; i++) {
             var line = [];
             for (var j = 0; j < TABLE_WIDTH; j++) {
@@ -32,7 +33,7 @@
     /*
      * 打印密表
      */
-    Vigenere.printTable = function() {
+    Vigenere.printTable = function(table) {
         var str = '';
         for (var i = 0; i < TABLE_WIDTH; i++) {
             for (var j = 0; j < TABLE_WIDTH; j++) {
@@ -46,7 +47,7 @@
     /*
      * 加密
      */
-    Vigenere.encrypt = function(key, words) {
+    Vigenere.encrypt = function(table, key, words) {
         var count = 0;
         key = key.toUpperCase();
         words = words.toUpperCase();
@@ -58,7 +59,7 @@
     /*
      * 解密
      */
-    Vigenere.decrypt = function(key, text) {
+    Vigenere.decrypt = function(table, key, text) {
         var count = 0;
         key = key.toUpperCase();
         text = text.toUpperCase();
@@ -69,21 +70,21 @@
         });
     };
 
-    /* -------------------- 测试 --------------------- */
+    /* -------------------- 测试 -------------------- */
 
     var secret = "computer";
     var text = "block cipher design principles";
     var ciphertext;
 
     // 生成密表
-    Vigenere.initTable();
-    Vigenere.printTable();
+    var table = Vigenere.initTable();
+    Vigenere.printTable(table);
 
     // 加密
-    var ciphertext = Vigenere.encrypt(secret, text);
+    var ciphertext = Vigenere.encrypt(table, secret, text);
     console.log(ciphertext);
 
     // 解密
-    console.log(Vigenere.decrypt(secret, ciphertext));
+    console.log(Vigenere.decrypt(table, secret, ciphertext));
 
 }());
