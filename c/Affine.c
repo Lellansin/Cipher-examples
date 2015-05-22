@@ -19,13 +19,13 @@ int  modInverse(int a, int m);
 /*
  * 加密
  *
- * @param key    密钥
+ * @param key    密钥 { a, b }
  * @param src    待加密的字符串
  * @param dest   经过加密后的字符串
  */
 char * encrypt(int* key, char* src, char* dest)
 {
-    char *pSrc = src;
+    char *pSrc  = src;
     char *pDest = dest;
 
     if (gcd(key[0], WIDTH) != 1)
@@ -37,9 +37,8 @@ char * encrypt(int* key, char* src, char* dest)
     for (int i = 0; *pSrc; ++i, ++pSrc, ++pDest)
     {
         if (!isalpha(*pSrc))
-        {
             continue;
-        }
+
         *pDest = shift(key, toupper(*pSrc));
     }
 
@@ -49,22 +48,21 @@ char * encrypt(int* key, char* src, char* dest)
 /*
  * 解密
  *
- * @param key    密钥
+ * @param key    密钥 { a, b }
  * @param src    待解密的字符串
  * @param dest   经过解密后的字符串
  */
 char * decrypt(int* key, char* src, char* dest)
 {
-    char *pSrc = src;
+    char *pSrc  = src;
     char *pDest = dest;
-    int arr[2] = { modInverse(key[0], WIDTH), -key[1] };
+    int  arr[2] = { modInverse(key[0], WIDTH), -key[1] };
 
     for (int i = 0; *pSrc; ++i, ++pSrc, ++pDest)
     {
         if (!isalpha(*pSrc))
-        {
             continue;
-        }
+
         *pDest = unshift(arr, toupper(*pSrc));
     }
 
@@ -74,8 +72,8 @@ char * decrypt(int* key, char* src, char* dest)
 int main(int argc, char const *argv[])
 {
     // 本例推算见 http://en.wikipedia.org/wiki/Affine_cipher
-    
-    int  key[] = {5, 8};          // 密匙
+
+    int  key[]  = { 5, 8 };       // 密匙
     char text[] = "AFFINECIPHER"; // 明文
     char ciphertext[1024], result[1024];
 
@@ -105,7 +103,7 @@ char shift(int *key, char ch)
 char unshift(int *key, char ch)
 {
     int offset = ch - 'A';
-    return (((key[0] * (offset + key[1])) % WIDTH + WIDTH) % 26) + 'A';
+    return (((key[0] * (offset + key[1])) % WIDTH + WIDTH) % WIDTH) + 'A';
 }
 
 /*
