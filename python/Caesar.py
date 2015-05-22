@@ -29,8 +29,10 @@ def getShiftCh(ch, shift):
 
 if __name__ == '__main__':
     text = 'hello world, this is Caesar cipher.'
+    
     # 右移
     ciphertext = caesar(text, 3);
     print(ciphertext)
+
     # 左移
     print(caesar(ciphertext, -3))
