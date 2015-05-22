@@ -21,6 +21,7 @@ def transposition(matrix, words):
 
     return cipher.lower()
 
+
 if __name__ == '__main__':
     # 本例推算见《密码学基础》(西安电子科技大学出版社) 第6页
 

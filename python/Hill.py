@@ -24,6 +24,7 @@ def encrypt(matrix, words):
             count += 1
     return cipher
 
+
 # 
 # 解密
 # 
@@ -41,6 +42,7 @@ def decrypt(matrix, words):
             count += 1
     return cipher
 
+
 # 
 # 检查
 # 
@@ -57,6 +59,7 @@ def check_param(matrix, words):
     except Exception, e:
         print("Error: 矩阵不可逆: " + str(e))
         quit()
+
 
 if __name__ == '__main__':
     # 本例推算见《密码学基础》(西安电子科技大学出版社) 第7页

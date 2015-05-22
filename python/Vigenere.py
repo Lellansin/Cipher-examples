@@ -17,6 +17,7 @@ def init_table():
                      for col in range(TABLE_WIDTH)] \
                      for row in range(TABLE_WIDTH)]
 
+
 # 
 # 显示密表
 # 
@@ -27,6 +28,7 @@ def print_table(table):
             output = output + table[row][col] + ' '
         output = output + '\n'
     print(output)
+
 
 # 
 # 加密
@@ -45,6 +47,7 @@ def encrypt(table, key, words):
 
     return cipher
 
+
 # 
 # 解密
 # 
@@ -57,6 +60,7 @@ def decrypt(table, key, words):
         text += chr((shift + TABLE_WIDTH) % TABLE_WIDTH + ASC_A)
         count += 1
     return text.lower()
+
 
 if __name__ == '__main__':
     # 本例推算见《密码学基础》(西安电子科技大学出版社) 第5页

@@ -26,6 +26,7 @@ def generate_table():
 def getStr(x, format='%02s'):
     return ''.join(format % i for i in x)
 
+
 # 
 # 显示棋盘
 # 
@@ -33,6 +34,7 @@ def print_table(table):
     print(' ' + getStr(range(1, 6)))
     for row in range(0, len(table)):
         print(str(row + 1) + getStr(table[row]))
+
 
 # 
 # 加密
@@ -49,6 +51,7 @@ def encrypt(table, words):
                 cipher += y + x
     return cipher
 
+
 # 
 # 解密
 # 
@@ -59,6 +62,7 @@ def decrypt(table, numbers):
         x = int(numbers[index + 1]) - 1
         text += table[y][x]
     return text
+
 
 if __name__ == '__main__':
     # 随机生成棋盘
