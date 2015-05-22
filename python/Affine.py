@@ -6,34 +6,37 @@
 # @website http://www.lellansin.com/tutorials/ciphers
 #
 
-WITDH = 26       # 密表宽度
+WIDTH = 26       # 密表宽度
 ASC_A = ord('A') # 密表起点
 
 # 
 # 加密
 # 
-def enctypt(key, words):
-    a, b = key[0] % WITDH, key[1] % WITDH
-    return ''.join([shift([a, b], ch) for ch in words.upper()])
+def encrypt(key, words):
+    return ''.join([shift(key, ch) for ch in words.upper()])
 
 # 
 # 解密
 # 
-def dectypt(key, words):
-    a, b = modInverse(key[0], WITDH), -key[1]
+def decrypt(key, words):
+    a, b = modInverse(key[0], WIDTH), -key[1]
     return ''.join([unshift([a, b], ch) for ch in words.upper()])
 
-
+# 
+# E(x) = (ax + b) mod m
+#
 def shift(key, ch):
     if str.isalpha(ch):
         offset = ord(ch) - ASC_A
-        return chr(((key[0] * offset + key[1]) % WITDH) + ASC_A)
+        return chr(((key[0] * offset + key[1]) % WIDTH) + ASC_A)
     return ''
 
-
+# 
+# D(x) = a^{-1}(x - b) mod m
+# 
 def unshift(key, ch):
     offset = ord(ch) - ASC_A
-    return chr(((key[0] * (offset + key[1])) % WITDH) + ASC_A)
+    return chr(((key[0] * (offset + key[1])) % WIDTH) + ASC_A)
 
 # 
 # 判断 a 与 b 是否互素 (Euclid's Algorithm)
@@ -66,8 +69,8 @@ if __name__ == '__main__':
     # 密匙
     key = [5, 8]
     # 加密
-    ciphertext = enctypt(key, text)
+    ciphertext = encrypt(key, text)
     # 密文
     print (ciphertext)
     # 解密
-    print (dectypt(key, ciphertext))
+    print (decrypt(key, ciphertext))
