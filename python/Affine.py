@@ -25,8 +25,10 @@ def dectypt(key, words):
 
 
 def shift(key, ch):
-    offset = ord(ch) - ASC_A
-    return chr(((key[0] * offset + key[1]) % WITDH) + ASC_A)
+    if str.isalpha(ch):
+        offset = ord(ch) - ASC_A
+        return chr(((key[0] * offset + key[1]) % WITDH) + ASC_A)
+    return ''
 
 
 def unshift(key, ch):
