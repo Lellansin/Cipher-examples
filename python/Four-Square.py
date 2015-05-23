@@ -5,7 +5,7 @@
 # @author  lellansin <lellansin@gmail.com>
 # @website http://www.lellansin.com/tutorials/ciphers
 #
-import Polybius, re
+import re
 
 # 默认密表
 table = [['A', 'B', 'C', 'D', 'E'], 
@@ -18,18 +18,20 @@ table = [['A', 'B', 'C', 'D', 'E'],
 # 生成棋盘
 # 
 def generate_table(key = ''):
+    # wiki原文：usually omitting "Q" or putting both "I" and "J" in the same location to reduce the alphabet to fit
     alphabet = 'ABCDEFGHIJKLMNOPRSTUVWXYZ'
     table = [[0] * 5 for row in range(5)]
-    key = key.upper()
+    key = re.sub(r'[\W]', '', key).upper()
 
     for row in range(5):
         for col in range(5):
             if len(key):
                 table[row][col] = key[0]
-                key = key[1:]
+                alphabet = alphabet.replace(key[0], '')
+                key = key.replace(key[0], '')
             else:
                 table[row][col] = alphabet[0]
-            alphabet = alphabet.replace(table[row][col], '')
+                alphabet = alphabet[1:]
     return table
 
 
@@ -39,19 +41,18 @@ def generate_table(key = ''):
 def encrypt(keys, words):
     ciphertext = ''
     words = re.sub(r'[\W]', '', words).upper().replace('Q', '')
-    R, L = generate_table(key[0]), generate_table(key[1])
+    R, L  = generate_table(key[0]), generate_table(key[1])
 
     for i in range(0, len(words), 2):
         digraphs = words[i:i+2]
-        a, b = mangle(R, L, digraphs)
-        ciphertext += a + b
+        ciphertext += mangle(R, L, digraphs)
     return ciphertext
 
 
 def mangle(R, L, digraphs):
-    a, b = digraphs[0], digraphs[1]
-    a, b = position(table, a), position(table, b)
-    return (R[a[0]][b[1]], L[b[0]][a[1]])
+    a = position(table, digraphs[0])
+    b = position(table, digraphs[1])
+    return R[a[0]][b[1]] + L[b[0]][a[1]]
 
 
 # 
@@ -64,15 +65,14 @@ def decrypt(keys, words):
 
     for i in range(0, len(words), 2):
         digraphs = words[i:i+2]
-        a, b = de_mangle(R, L, digraphs)
-        ciphertext += a + b
+        ciphertext += unmangle(R, L, digraphs)
     return ciphertext.lower()
 
 
-def de_mangle(R, L, digraphs):
-    a, b = digraphs[0], digraphs[1]
-    a, b = position(R, a), position(L, b)
-    return (table[a[0]][b[1]], table[b[0]][a[1]])
+def unmangle(R, L, digraphs):
+    a = position(R, digraphs[0])
+    b = position(L, digraphs[1])
+    return table[a[0]][b[1]] + table[b[0]][a[1]]
 
 
 # todo
@@ -89,11 +89,14 @@ if __name__ == '__main__':
 
     # 明文
     plaintext = 'help me obiwankenobi'
+
     # 密匙
     key = ['example', 'keyword']
+
     # 加密
     ciphertext = encrypt(key, plaintext)
     print(ciphertext)
+
     # 解密
     print(decrypt(key, ciphertext))
 
