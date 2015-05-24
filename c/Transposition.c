@@ -50,7 +50,7 @@ void encrypt(char *key, char *words, char *cipher)
  */
 void decrypt(char *key, char *cipher, char *plaintext)
 {
-    int  len = strlen(key), i;
+    int  len  = strlen(key), i;
     char *arr = (char*)malloc(sizeof(char) * len);
 
     for (i = 0; i < len; ++i)
@@ -65,7 +65,7 @@ int main(int argc, char const *argv[])
     // 本例推算见《密码学基础》(西安电子科技大学出版社) 第6页
 
     char text[] = "Informationsecurityisimportant";
-    char key[] = "2413";
+    char  key[] = "2413";
     char ciphertext[1024], plaintext[1024];
 
     encrypt(key, text, ciphertext);
