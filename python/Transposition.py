@@ -15,11 +15,22 @@ def transposition(matrix, words):
     blanks = ''.join(' ' for i in range(length - 1))
 
     for x in range(0, len(words), length):
+        # todo 优化
         item = words[ x : x + length ] + blanks
+        print(item)
         for pos in matrix:
+            print(pos - 1)
             cipher += item[pos - 1]
 
     return cipher.lower()
+
+
+def reverse(matrix):
+    length = len(matrix)
+    arr = [0] * length
+    for i in range(length):
+        arr[matrix[i] - 1] = i + 1
+    return arr
 
 
 if __name__ == '__main__':
@@ -39,7 +50,7 @@ if __name__ == '__main__':
     print('密文 ' + ciphertext)
 
     # 置换矩阵反序即为密匙
-    secret = matrix[::-1];
+    secret = reverse(matrix)
     print('密匙 ' + str(secret))
 
     # 解密字符串（使用密匙置换）

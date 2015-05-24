@@ -28,8 +28,7 @@
     }
 
     var reverse = function(matrix) {
-        var min = 1,
-            max = matrix.length;
+        var max = matrix.length;
         var arr = [];
 
         for (var i = 0; i < max; i++) {

@@ -7,7 +7,6 @@
 
 #include <stdio.h>
 #include <ctype.h>
-#include <string.h>
 
 char getShiftCh(char ch, int shift, char start, char end);
 
