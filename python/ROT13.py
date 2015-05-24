@@ -18,13 +18,14 @@ if __name__ == '__main__':
     # ROT-n 就是凯撒密码位移 n
 
     # 密文
-    text = "Jul qvq gur puvpxra pebff gur ebnq?\nGb trg gb gur bgure fvqr!"
+    text = 'Jr nyy raq hc qrnq, gur dhrfgvba vf ubj naq jul.'
     
     # 解密
     plaintext = rotaion(text)
 
     # 明文
-    print('解密: ' + plaintext)
+    print(plaintext)
 
     # 加密对比
-    print('对比: ' + str(rotaion(plaintext) == text))
+    if rotaion(plaintext) == text:
+        print('You are right.')
