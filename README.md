@@ -46,18 +46,17 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | Scytale | ... | ... | ... | ...
 | Skip | ... | ... | ... | ...
 | Templar | ... | ... | ... | ...
-| Transposition cipher | 置换密码 | ... | [Transposition.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Transposition.py) | [Transposition.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Transposition.js)
+| Transposition cipher | 置换密码 | [Transposition.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Transposition.c) | [Transposition.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Transposition.py) | [Transposition.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Transposition.js)
 | Trifid cipher | 三分密码 | ... | ... | ...
 | Trithemius | ... | ... | ... | ...
 | Two-square cipher | 二方密码 | ... | ... | ...
 | Vigenère | 维吉尼亚密码 | [Vigenere.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Vigenere.c)  | [Vigenere.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Vigenere.py) | [Vigenere.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Vigenere.js)
 | Zigzag (Rail Fence) | ... | ... | ... | ...
 
-代码中如果有偏差谬误欢迎在在 [Issue](https://github.com/Lellansin/Cipher-examples/issues/) 中讨论指出，当然 PR 也十分欢迎的。
-
 
 ## 注
 
+代码中如果有偏差谬误欢迎在在 [Issue](https://github.com/Lellansin/Cipher-examples/issues/) 中讨论指出，当然 PR 也十分欢迎的。
 
 
 | 英文                  | 翻译 |
@@ -65,5 +64,5 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | Double Transposition | 双层置换为博主自译, 未找到 wiki 之类的官方翻译。
 | ROT-13 | 未找到合适翻译
 
-如果有更正式的翻译请在 [Issue](https://github.com/Lellansin/Cipher-examples/issues/) 中讨论指出
+如果有更正式的翻译也请在 [Issue](https://github.com/Lellansin/Cipher-examples/issues/) 中讨论指出
 
