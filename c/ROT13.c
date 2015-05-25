@@ -55,7 +55,7 @@ char getShiftCh(char ch, int shift, char start, char end)
 int main(int argc, char const *argv[])
 {
     char ciphertext[] = "Gehzna jrag gb Jnxr Vfynaq sbe n fubeg, uvtuyl choyvpvmrq zrrgvat jvgu ZnpNeguhe. Gur PVN unq cerivbhfyl gbyq Gehzna gung Puvarfr vaibyirzrag jnf hayvxryl. ZnpNeguhe, fnlvat ur jnf fcrphyngvat, fnj yvggyr evfx. Gur trareny rkcynvarq gung gur Puvarfr unq ybfg gurve jvaqbj bs bccbeghavgl gb uryc Abegu Xbern'f vainfvba. Ur rfgvzngrq gur Puvarfr unq 300,000 fbyqvref va Znapuhevn, jvgu orgjrra 100,000-125,000 zra nybat gur Lnyh; unys pbhyq or oebhtug npebff gur Lnyh. Ohg gur Puvarfr unq ab nve sbepr; urapr, \"vs gur Puvarfr gevrq gb trg qbja gb Clbatlnat gurer jbhyq or gur terngrfg fynhtugre.\"";
-    char replytext[] = "Lrf, lbh qvq gur fynhtugre, ohg jr PUVARFR ner abg srne.";
+    char replytext[] = "Jr PUVARFR ner abg srne.";
     char plaintext[1024], reply[1024];
 
     Rotation(ciphertext, plaintext);
