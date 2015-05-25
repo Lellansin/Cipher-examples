@@ -39,7 +39,7 @@
 
     /* -------------------- 测试 -------------------- */
 
-    var text = 'Gb phg bss Puvarfr fhccyvrf gb gur Abegu Xbernaf. Qrfgebl obgu oevqtrf bs Fvab ol nvepensg. Sebz Abirzore 1950, hfr O-29 naq O-17 urnil obzoref, naq S-80 svtugre-obzoref gb ercrngrqyl nggnpx gur oevqtrf. -- Qbhtynf ZnpNeguhe';
+    var text = 'Gb phg bss Puvarfr fhccyvrf gb gur Abegu Xbernaf, qrfgebl obgu Fvab–Xberna Oevqtrf ol nvepensg. Sebz Abirzore 1950, hfr O-29 naq O-17 urnil obzoref, naq S-80 svtugre-obzoref gb ercrngrqyl nggnpx gur oevqtrf. -- Qbhtynf ZnpNeguhe';
 
     var ciphertext = rotation(text);
     console.log('解密 \n%s', ciphertext);
