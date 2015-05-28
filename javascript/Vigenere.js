@@ -62,8 +62,7 @@
     Vigenere.decrypt = function(table, key, text) {
         var count = 0;
         key = key.toUpperCase();
-        text = text.toUpperCase();
-        return text.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(text, ch) {
+        return text.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(match, ch) {
             var offset = ch.charCodeAt() - key[count++ % key.length].charCodeAt();
             offset >= 0 ? null : offset += TABLE_WIDTH;
             return String.fromCharCode(ASCII.A + offset).toLowerCase();
