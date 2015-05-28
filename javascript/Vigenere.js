@@ -50,8 +50,7 @@
     Vigenere.encrypt = function(table, key, words) {
         var count = 0;
         key = key.toUpperCase();
-        words = words.toUpperCase();
-        return words.replace(/[\W]*(\w)[\W]*/g, function(text, ch) {
+        return words.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(text, ch) {
             return table[key[count++ % key.length].charCodeAt() - ASCII.A][ch.charCodeAt() - ASCII.A];
         });
     };
