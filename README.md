@@ -40,7 +40,7 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | Playfair cipher | 波雷費密碼 | ... | [Playfair.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Playfair.py) | [Playfair.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Playfair.js)
 | Pollux | ... | ... | ... | ...
 | Polybius square |波利比烏斯(棋盘密码)|[Polybius.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Polybius.c) | [Polybius.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Polybius.py) | [Polybius.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Polybius.js)
-| Porta | ... | ... | ... | ...
+| Porta cipher | 波尔塔密码 | ... | [Porta.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Porta.py) | ...
 | Railfence | ... | ... | ... | ...
 | ROT-13 | ROT-13 | [ROT13.c](https://github.com/Lellansin/cipher-examples/blob/master/c/ROT13.c)| [ROT13.py](https://github.com/Lellansin/cipher-examples/blob/master/python/ROT13.py) | [ROT13.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/ROT13.js)
 | Scytale | ... | ... | ... | ...
@@ -64,6 +64,7 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | Double Transposition | 双层置换为博主自译, 未找到 wiki 之类的官方翻译。
 | ROT-13 | 未找到合适翻译
 | Kamasutra cipher | 欲经密码为博主自译, 未找到 wiki 之类的官方翻译。
+| Porta cipher | 波尔塔密码为博主自译, 未找到 wiki 之类的官方翻译。
 
 如果有更正式的翻译也请在 [Issue](https://github.com/Lellansin/Cipher-examples/issues/) 中讨论指出
 
