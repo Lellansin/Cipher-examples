@@ -49,8 +49,8 @@ def generateTable(key):
 # 
 def encrypt(key, words):
     cipher = ""
-    table = generateTable(key)
     count = 0
+    table = generateTable(key)
     for ch in words.upper():
         cipher += getOpponent(table[count], ch)
         count = (count + 1) % len(table)
@@ -61,7 +61,6 @@ def encrypt(key, words):
 # 
 def decrypt(key, words):
     return encrypt(key, words)
-
 
 #
 # 获取字母在密表中的位置
@@ -91,6 +90,7 @@ def getOpponent(table, ch):
         return table[1][col]
     else:
         return ch
+
 
 if __name__ == "__main__":
     # 本例推算见 http://www.cryptool-online.org/index.php?option=com_content&view=article&id=124&Itemid=147&lang=en

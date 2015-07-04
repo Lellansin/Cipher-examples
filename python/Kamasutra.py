@@ -23,7 +23,6 @@ def encrypt(table, words):
 def decrypt(table, words):
     return encrypt(table, words)
 
-
 def toLower(ch, flag):
     if flag:
         return ch.lower()
@@ -46,7 +45,6 @@ def getPosition(table, ch):
     else:
         return (None, None);
 
-
 # 
 # 根据位置获取对应另一个字母
 # 
@@ -64,7 +62,6 @@ def getOpponent(table, ch):
         return toLower(table[1][col], flag)
     else:
         return ch
-
 
 
 if __name__ == '__main__':
