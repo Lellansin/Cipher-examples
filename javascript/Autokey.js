@@ -36,7 +36,6 @@
     Autokey.encrypt = function(key, words) {
         var table = Autokey.initTable();
         var count = 0;
-        key = key.toUpperCase();
         return words.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(text, ch) {
             return table[key[count++ % key.length].charCodeAt() - ASCII.A][ch.charCodeAt() - ASCII.A];
         });
@@ -47,20 +46,22 @@
      */
     Autokey.decrypt = function(key, text) {
         var count = 0;
-        key = key.toUpperCase();
         return text.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(match, ch) {
             var offset = ch.charCodeAt() - key[count++ % key.length].charCodeAt();
-            if(offset < 0) offset += TABLE_WIDTH;
+            if (offset < 0) offset += TABLE_WIDTH;
             return String.fromCharCode(ASCII.A + offset);
         });
     };
 
     // 获取密匙
-    var getKey = function(keyword, words) {
-        if (keyword.length < words.length) {
-            return keyword + words.replace(/[\W]/g, '').substr(0, words.length - keyword.length);
-        }
-        return keyword;
+    var getKey = function(words, keyword) {
+        if (!keyword)
+            return words.replace(/[\W]/g, '').toUpperCase();
+
+        if (keyword.length < words.length)
+            return (keyword + words.replace(/[\W]/g, '').substr(0, words.length - keyword.length)).toUpperCase();
+
+        return keyword.toUpperCase();
     };
 
     /* -------------------- 测试 -------------------- */
@@ -70,7 +71,7 @@
     var keyword = 'KEY';
 
     // 密匙
-    var key = getKey(keyword, text);
+    var key = getKey(text, keyword);
 
     // 加密
     var ciphertext = Autokey.encrypt(key, text);
