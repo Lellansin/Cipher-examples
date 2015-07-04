@@ -31,23 +31,10 @@
     };
 
     /*
-     * 打印密表
-     */
-    Vigenere.printTable = function(table) {
-        var str = '';
-        for (var i = 0; i < TABLE_WIDTH; i++) {
-            for (var j = 0; j < TABLE_WIDTH; j++) {
-                str += table[i][j] + ' '
-            }
-            str += '\n'
-        }
-        console.log(str);
-    };
-
-    /*
      * 加密
      */
-    Vigenere.encrypt = function(table, key, words) {
+    Vigenere.encrypt = function(key, words) {
+        var table = Vigenere.initTable();
         var count = 0;
         key = key.toUpperCase();
         return words.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(text, ch) {
@@ -58,31 +45,28 @@
     /*
      * 解密
      */
-    Vigenere.decrypt = function(table, key, text) {
+    Vigenere.decrypt = function(key, text) {
         var count = 0;
         key = key.toUpperCase();
         return text.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(match, ch) {
             var offset = ch.charCodeAt() - key[count++ % key.length].charCodeAt();
             offset >= 0 ? null : offset += TABLE_WIDTH;
-            return String.fromCharCode(ASCII.A + offset).toLowerCase();
+            return String.fromCharCode(ASCII.A + offset);
         });
     };
 
     /* -------------------- 测试 -------------------- */
+    // 本例推算见《密码学基础》(西安电子科技大学出版社) 第5页
 
-    var secret = "computer";
     var text = "block cipher design principles";
+    var key = "computer";
     var ciphertext;
 
-    // 生成密表
-    var table = Vigenere.initTable();
-    Vigenere.printTable(table);
-
     // 加密
-    var ciphertext = Vigenere.encrypt(table, secret, text);
+    var ciphertext = Vigenere.encrypt(key, text);
     console.log(ciphertext);
 
     // 解密
-    console.log(Vigenere.decrypt(table, secret, ciphertext));
+    console.log(Vigenere.decrypt(key, ciphertext));
 
 }());
