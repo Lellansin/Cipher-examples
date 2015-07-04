@@ -1,5 +1,5 @@
 /*
- * Base64 Cipher
+ * Base64 Encoding
  *
  * @author  lellansin <lellansin@gmail.com>
  * @website http://www.lellansin.com/tutorials/ciphers
@@ -11,9 +11,9 @@
     var ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
  
     /*
-     * 加密
+     * 编码
      */
-    Base64.encrypt = function (words) {
+    Base64.encode = function (words) {
         var cipher = '', code = utf8_encode(words);
         var i = 0, chr1, chr2, chr3,
              enc1, enc2, enc3, enc4;
@@ -40,9 +40,9 @@
     };
  
     /*
-     * 解密
+     * 解码
      */
-    Base64.decrypt = function (text) {
+    Base64.decode = function (text) {
         var code = '', cipher = text.replace(/[^A-Za-z0-9\+\/\=]/g, '');
         var i = 0, chr1, chr2, chr3,
              enc1, enc2, enc3, enc4;
@@ -104,11 +104,11 @@
     // 明文
     var text = 'hello world!';
 
-    // 加密
-    var str = Base64.encrypt(text);
+    // 编码
+    var str = Base64.encode(text);
     console.log('密文', str); 
 
-    // 解密
-    console.log('原文', Base64.decrypt(str));
+    // 解码
+    console.log('原文', Base64.decode(str));
 
 })();
