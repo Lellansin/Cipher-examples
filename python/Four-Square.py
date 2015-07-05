@@ -99,5 +99,3 @@ if __name__ == '__main__':
 
     # 解密
     print(decrypt(key, ciphertext))
-
-
