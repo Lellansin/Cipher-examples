@@ -34,7 +34,6 @@ def generate_table(key = ''):
                 alphabet = alphabet[1:]
     return table
 
-
 # 
 # 加密
 # 
@@ -54,7 +53,6 @@ def mangle(R, L, digraphs):
     b = position(table, digraphs[1])
     return R[a[0]][b[1]] + L[b[0]][a[1]]
 
-
 # 
 # 解密
 # 
@@ -68,12 +66,10 @@ def decrypt(keys, words):
         ciphertext += unmangle(R, L, digraphs)
     return ciphertext.lower()
 
-
 def unmangle(R, L, digraphs):
     a = position(R, digraphs[0])
     b = position(L, digraphs[1])
     return table[a[0]][b[1]] + table[b[0]][a[1]]
-
 
 # todo
 def position(table, ch):

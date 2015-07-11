@@ -72,6 +72,7 @@
 
     // 密匙
     var key = getKey(text, keyword);
+    console.log(key);
 
     // 加密
     var ciphertext = Autokey.encrypt(key, text);
