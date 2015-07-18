@@ -1,2 +1,4 @@
 *.out
 *.pyc
+*.beam
+*.dump
