@@ -17,9 +17,7 @@ def transposition(matrix, words):
     for x in range(0, len(words), length):
         # todo 优化
         item = words[ x : x + length ] + blanks
-        print(item)
         for pos in matrix:
-            print(pos - 1)
             cipher += item[pos - 1]
 
     return cipher.lower()
