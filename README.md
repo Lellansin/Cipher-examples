@@ -1,6 +1,6 @@
 # 常见加密算法
 
-[博客](http://www.lellansin.com/tutorials/ciphers)源代码整理处，转载请标明出处。如果你觉得有帮助，可以点赞（左上角的Star）来支持博主。
+引用、转载请标明出处。如果你觉得有帮助，可以点赞（左上角的Star）来支持博主。
 
 ## Suhidfh
 
@@ -17,7 +17,7 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | AtBash| ... | ... | ... | ...
 | Autokey | 自动密匙密码 | [Autokey.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Autokey.c) | ... | [Autokey.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Autokey.js) 
 | Bacon's cipher | 培根密码 | ... |[Bacon.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Bacon.py) | [Bacon.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Bacon.js) 
-| Base64 | Base64编码 | ... | ... | [Base64.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Base64.js) 
+| Base64 | Base64编码 | [Base64.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Base64.c) | ... | [Base64.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Base64.js) 
 | Beaufort | 博福特密码 | ... | ... | ...
 | Bifid cipher| 二分密码 | ... | [Bifid.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Bifid.py) | ...
 | Caesar | 凯撒密码 |[Caesar.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Caesar.c) |[Caesar.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Caesar.py) |[Caesar.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Caesar.js) 
