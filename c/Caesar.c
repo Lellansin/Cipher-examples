@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <stddef.h>
 
 char getShiftCh(char ch, int shift, char start, char end);
 
@@ -17,27 +18,28 @@ char getShiftCh(char ch, int shift, char start, char end);
  * @param int    [in]  shift  位移
  * @param char * [out] result 结果保存
  */
-void caesar(char *words, int shift, char *result)
+void caesar(char *words, int shift, char *result, size_t result_size)
 {
     int i;
     char *p = words;
 
-    for (i = 0; *p; p++, i++)
+    for (i = 0; *p && (size_t)i < result_size - 1; p++, i++)
     {
         if (isalpha(words[i]))
         {
             if (islower(words[i]))
             {
-                sprintf(result, "%s%c", result, getShiftCh(words[i], shift, 'a', 'z'));
+                result[i] = getShiftCh(words[i], shift, 'a', 'z');
             } else
             {
-                sprintf(result, "%s%c", result, getShiftCh(words[i], shift, 'A', 'Z'));
+                result[i] = getShiftCh(words[i], shift, 'A', 'Z');
             }
         } else
         {
-            sprintf(result, "%s%c", result, words[i]);
+            result[i] = words[i];
         }
     }
+    result[i] = '\0';
 }
 
 char getShiftCh(char ch, int shift, char start, char end)
@@ -58,11 +60,11 @@ int main(int argc, char const *argv[])
     int shift = -5;
 
     // 左移 5
-    caesar(text, shift, cipherstext);
+    caesar(text, shift, cipherstext, sizeof(cipherstext));
     printf("左移 %s\n", cipherstext);
 
     // 右移 5
-    caesar(cipherstext, -shift, result);
+    caesar(cipherstext, -shift, result, sizeof(result));
     printf("右移 %s\n", result);
 
     return 0;
