@@ -37,7 +37,7 @@ def encrypt(key, words):
     words = re.sub(r'[\WJ]', '', words.upper())
     text = ''
     
-    for i in xrange(0, len(words) - 1):
+    for i in range(0, len(words) - 1):
         text += words[i]
         if words[i] == words[i+1]:
             text += 'X'

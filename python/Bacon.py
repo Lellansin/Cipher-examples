@@ -25,7 +25,7 @@ def generate_dict():
 
     bacon_dict = {}
 
-    for i in xrange(0, 26):
+    for i in range(0, 26):
         tmp = bin(i)[2:].zfill(5)
         tmp = tmp.replace('0', 'a')
         tmp = tmp.replace('1', 'b')
@@ -46,7 +46,7 @@ def encode(words, bacon_dict):
 
     cipher = ''
     bacon_dict = {v: k for k, v in bacon_dict.items()}  # hack to get key from value - reverse dict
-    words = normalize('NFKD', words).encode('ascii', 'ignore')  # replace national characters to ASCII equivalents
+    words = normalize('NFKD', words).encode('ascii', 'ignore').decode('ascii')  # replace national characters to ASCII equivalents
     words = words.upper()
     words = re.sub(r'[^A-Z]+', '', words)
 
@@ -69,7 +69,7 @@ def decode(words, bacon_dict):
     words = words.lower()
     words = re.sub(r'[^ab]+', '', words)
 
-    for i in xrange(0, len(words) / 5):
+    for i in range(0, len(words) // 5):
         cipher += bacon_dict.get(words[i * 5:i * 5 + 5], ' ')
     return cipher
 

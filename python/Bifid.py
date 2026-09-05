@@ -29,7 +29,7 @@ def decrypt(table, text):
     numbers = ''
     text = Polybius.encrypt(table, text)
 
-    a, b = text[:len(text) / 2], text[len(text) / 2:]
+    a, b = text[:len(text) // 2], text[len(text) // 2:]
 
     numbers = ''.join(a[i] + b[i] for i in range(len(a)))
 
