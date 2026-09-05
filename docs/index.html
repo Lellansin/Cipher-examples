@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>常见加密算法 - Cipher Examples</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #2c3e50; line-height: 1.6; }
+  header { background: #2c3e50; color: #fff; padding: 24px 16px; text-align: center; }
+  header h1 { font-size: 26px; margin-bottom: 4px; }
+  header p { opacity: .8; font-size: 14px; }
+  header a { color: #7fdbff; }
+  main { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
+  h2 { margin: 28px 0 12px; padding-left: 10px; border-left: 4px solid #3498db; font-size: 20px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
+  .card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+  .card h3 { font-size: 16px; margin-bottom: 6px; color: #2c3e50; }
+  .card .desc { font-size: 13px; color: #666; margin-bottom: 10px; }
+  .card textarea, .card input { width: 100%; padding: 6px 8px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 14px; margin-bottom: 8px; font-family: inherit; }
+  .card textarea { height: 56px; resize: vertical; }
+  .card .row { display: flex; gap: 8px; align-items: center; }
+  .card button { flex: 1; padding: 6px 0; border: none; border-radius: 6px; background: #3498db; color: #fff; cursor: pointer; font-size: 14px; }
+  .card button:hover { background: #2f81c9; }
+  .card .out { margin-top: 8px; padding: 8px; background: #f0f6fc; border-radius: 6px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; word-break: break-all; min-height: 34px; }
+  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); font-size: 14px; }
+  th, td { padding: 8px 12px; border-bottom: 1px solid #eef1f4; text-align: left; }
+  th { background: #eef3f8; }
+  tr:last-child td { border-bottom: none; }
+  td a { color: #0969da; text-decoration: none; }
+  td a:hover { text-decoration: underline; }
+  .todo { color: #b0b8c1; }
+  footer { text-align: center; color: #99a3ad; font-size: 13px; padding: 16px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>常见加密算法</h1>
+  <p>经典密码学算法的多语言示例集合 · <a href="https://github.com/Lellansin/Cipher-examples">GitHub 仓库</a></p>
+</header>
+<main>
+
+<h2>在线示例</h2>
+<p style="margin-bottom:12px; color:#666; font-size:14px;">以下演示与仓库中的实现逻辑一致，可直接试玩。加密后再解密即可还原明文。</p>
+<div class="grid" id="demos"></div>
+
+<h2>算法实现列表</h2>
+<table>
+  <thead><tr><th>Algorithm</th><th>名称</th><th>C</th><th>Python</th><th>Javascript</th></tr></thead>
+  <tbody id="list"></tbody>
+</table>
+
+</main>
+<footer>Cipher-examples · 持续迭代中 · 由定时任务每周六自动维护</footer>
+
+<script>
+// ============ 算法实现（与仓库各语言示例逻辑一致） ============
+
+// 凯撒密码: 字母整体位移
+function caesar(text, shift) {
+  return text.replace(/[a-zA-Z]/g, function (ch) {
+    var base = ch <= 'Z' ? 65 : 97;
+    return String.fromCharCode((ch.charCodeAt(0) - base + shift + 26 * 10) % 26 + base);
+  });
+}
+
+// ROT13: 位移 13 的凯撒, 自反
+function rot13(text) { return caesar(text, 13); }
+
+// 埃特巴什: 字母表倒序映射, 自反
+function atbash(text) {
+  return text.replace(/[a-zA-Z]/g, function (ch) {
+    var base = ch <= 'Z' ? 65 : 97;
+    return String.fromCharCode(base + 25 - (ch.charCodeAt(0) - base));
+  });
+}
+
+// 维吉尼亚: 密钥字母逐位位移
+function vigenere(text, key, dir) {
+  key = key.toUpperCase().replace(/[^A-Z]/g, '') || 'A';
+  var count = 0;
+  return text.replace(/[a-zA-Z]/g, function (ch) {
+    var base = ch <= 'Z' ? 65 : 97;
+    var shift = key.charCodeAt(count++ % key.length) - 65;
+    return String.fromCharCode((ch.charCodeAt(0) - base + dir * shift + 26 * 10) % 26 + base);
+  });
+}
+
+// 栅栏密码: W 形书写按栏读出
+function railfence(text, rails, decrypt) {
+  if (rails < 2) return text;
+  var pattern = [], rail = 0, step = 1, i;
+  for (i = 0; i < text.length; i++) {
+    pattern.push(rail);
+    if (rail === 0) step = 1; else if (rail === rails - 1) step = -1;
+    rail += step;
+  }
+  if (!decrypt) {
+    var fence = []; for (i = 0; i < rails; i++) fence.push([]);
+    for (i = 0; i < text.length; i++) fence[pattern[i]].push(text[i]);
+    return fence.map(function (row) { return row.join(''); }).join('');
+  }
+  var rows = [], idx = 0, out = '';
+  for (i = 0; i < rails; i++) {
+    var n = pattern.filter(function (r) { return r === i; }).length;
+    rows.push(text.slice(idx, idx + n).split('')); idx += n;
+  }
+  for (i = 0; i < text.length; i++) out += rows[pattern[i]].shift();
+  return out;
+}
+
+// 密码棒: 每行 n 个字母写成矩形, 逐列读出
+function scytale(text, n, decrypt) {
+  if (n < 2) return text;
+  if (!decrypt) {
+    var out = '';
+    for (var col = 0; col < n; col++)
+      for (var i = col; i < text.length; i += n) out += text[i];
+    return out;
+  }
+  var len = text.length, result = new Array(len), idx = 0;
+  for (var c = 0; c < n; c++) {
+    var count = Math.floor((len - c + n - 1) / n);
+    for (var k = 0; k < count && idx + k < len; k++) result[c + k * n] = text[idx + k];
+    idx += count;
+  }
+  return result.join('');
+}
+
+// ============ 演示卡片 ============
+var demos = [
+  { name: '凯撒密码 Caesar', desc: '每个字母在字母表上固定位移 shift 位，位移 13 即 ROT13。',
+    render: function (card) {
+      var input = el('textarea'), shift = el('input'), out = outBox();
+      shift.placeholder = '位移量 shift (默认 3)'; shift.value = '3';
+      card.append(input, shift, btnRow('加密', function () { out.textContent = caesar(input.value, toInt(shift.value, 3)); }),
+        btnRow('解密', function () { out.textContent = caesar(input.value, -toInt(shift.value, 3)); }), out);
+    } },
+  { name: 'ROT13', desc: '凯撒密码的特例（位移 13），同一操作既是加密也是解密。',
+    render: function (card) {
+      var input = el('textarea'), out = outBox();
+      card.append(input, btnRow('转换 ROT13', function () { out.textContent = rot13(input.value); }), out);
+    } },
+  { name: '埃特巴什 Atbash', desc: '字母表倒序映射：A↔Z、B↔Y……加密与解密是同一个操作。',
+    render: function (card) {
+      var input = el('textarea'), out = outBox();
+      card.append(input, btnRow('转换 Atbash', function () { out.textContent = atbash(input.value); }), out);
+    } },
+  { name: '维吉尼亚 Vigenère', desc: '用密钥单词逐字母循环位移，同一字母因位置不同而密文不同。',
+    render: function (card) {
+      var input = el('textarea'), key = el('input'), out = outBox();
+      key.placeholder = '密钥单词 (默认 secret)'; key.value = 'secret';
+      card.append(input, key, btnRow('加密', function () { out.textContent = vigenere(input.value, key.value, 1); }),
+        btnRow('解密', function () { out.textContent = vigenere(input.value, key.value, -1); }), out);
+    } },
+  { name: '栅栏密码 Rail Fence', desc: '明文沿 W 形栅栏逐个书写，再按栏拼接成密文。',
+    render: function (card) {
+      var input = el('textarea'), rails = el('input'), out = outBox();
+      rails.placeholder = '栏数 (默认 3)'; rails.value = '3';
+      card.append(input, rails, btnRow('加密', function () { out.textContent = railfence(input.value, toInt(rails.value, 3), false); }),
+        btnRow('解密', function () { out.textContent = railfence(input.value, toInt(rails.value, 3), true); }), out);
+    } },
+  { name: '密码棒 Scytale', desc: '古希腊斯巴达：羊皮条绕棒书写，每行 n 个字母写成矩形后逐列读出。',
+    render: function (card) {
+      var input = el('textarea'), n = el('input'), out = outBox();
+      n.placeholder = '每圈字母数 n (默认 5)'; n.value = '5';
+      card.append(input, n, btnRow('加密', function () { out.textContent = scytale(input.value, toInt(n.value, 5), false); }),
+        btnRow('解密', function () { out.textContent = scytale(input.value, toInt(n.value, 5), true); }), out);
+    } }
+];
+
+// ============ 渲染工具 ============
+function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
+function toInt(v, d) { var n = parseInt(v, 10); return isNaN(n) ? d : n; }
+function outBox() { var e = el('div', 'out'); e.textContent = '结果…'; return e; }
+function btnRow(label, fn) {
+  var wrap = el('div', 'row'), b = el('button');
+  b.textContent = label; b.onclick = function () { fn(b); };
+  wrap.append(b); return wrap;
+}
+var root = document.getElementById('demos');
+demos.forEach(function (d) {
+  var card = el('div', 'card'), h = el('h3'), p = el('div', 'desc');
+  h.textContent = d.name; p.textContent = d.desc;
+  card.append(h, p); d.render(card); root.append(card);
+});
+
+// ============ 算法列表（与 README 表格同步） ============
+var SRC = 'https://github.com/Lellansin/Cipher-examples/blob/master/';
+var list = [
+  ['Affine cipher', '仿射密码', 'c/Affine.c', 'python/Affine.py', null],
+  ['Alberti cipher', '阿尔伯蒂密码', null, null, 'javascript/Alberti.js'],
+  ['AtBash', '埃特巴什密码', null, 'python/AtBash.py', null],
+  ['Autokey', '自动密匙密码', 'c/Autokey.c', null, 'javascript/Autokey.js'],
+  ["Bacon's cipher", '培根密码', null, 'python/Bacon.py', 'javascript/Bacon.js'],
+  ['Base64', 'Base64编码', 'c/Base64.c', null, 'javascript/Base64.js'],
+  ['Beaufort', '博福特密码', null, 'python/Beaufort.py', null],
+  ['Bifid cipher', '二分密码', null, 'python/Bifid.py', null],
+  ['Caesar', '凯撒密码', 'c/Caesar.c', 'python/Caesar.py', 'javascript/Caesar.js'],
+  ['Columnar Transposition', '列置换密码', null, 'python/ColumnarTransposition.py', null],
+  ['Four-Square cipher', '四方密码', null, 'python/Four-Square.py', 'javascript/Four-Square.js'],
+  ['Gronsfeld', '格朗斯菲尔德密码', null, 'python/Gronsfeld.py', null],
+  ['Hill cipher', '希尔密码', null, 'python/Hill.py', null],
+  ['Kamasutra cipher', '欲经密码', null, 'python/Kamasutra.py', 'javascript/Kamasutra.js'],
+  ['Keyed Caesar', '带密钥凯撒密码', null, 'python/KeyedCaesar.py', null],
+  ['Morse Code', '摩斯密码', null, null, 'javascript/Morse.js'],
+  ['Playfair cipher', '波雷費密碼', null, 'python/Playfair.py', 'javascript/Playfair.js'],
+  ['Polybius square', '波利比烏斯(棋盘密码)', 'c/Polybius.c', 'python/Polybius.py', 'javascript/Polybius.js'],
+  ['Porta cipher', '波尔塔密码', null, 'python/Porta.py', 'javascript/Porta.js'],
+  ['Railfence', '栅栏密码', null, 'python/Railfence.py', null],
+  ['ROT-13', 'ROT-13', 'c/ROT13.c', 'python/ROT13.py', 'javascript/ROT13.js'],
+  ['Scytale', '密码棒密码', null, 'python/Scytale.py', null],
+  ['Transposition cipher', '置换密码', 'c/Transposition.c', 'python/Transposition.py', 'javascript/Transposition.js'],
+  ['Two-square cipher', '二方密码', null, 'python/Two-Square.py', null],
+  ['Vigenère', '维吉尼亚密码', 'c/Vigenere.c', 'python/Vigenere.py', 'javascript/Vigenere.js'],
+  ['Zigzag (Rail Fence)', '栅栏密码', null, 'python/Railfence.py', null]
+];
+var tbody = document.getElementById('list');
+list.forEach(function (row) {
+  var tr = document.createElement('tr');
+  var cells = [row[0], row[1]];
+  for (var i = 2; i < 5; i++) cells.push(row[i] ? '<a href="' + SRC + row[i] + '">' + row[i].split('/').pop() + '</a>' : '<span class="todo">待实现</span>');
+  tr.innerHTML = '<td><b>' + cells[0] + '</b></td><td>' + cells[1] + '</td><td>' + cells[2] + '</td><td>' + cells[3] + '</td><td>' + cells[4] + '</td>';
+  tbody.append(tr);
+});
+</script>
+</body>
+</html>
