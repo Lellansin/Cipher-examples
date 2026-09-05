@@ -37,7 +37,7 @@
         var table = Vigenere.initTable();
         var count = 0;
         key = key.toUpperCase();
-        return words.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(text, ch) {
+        return words.toUpperCase().replace(/[^A-Z]*([A-Z])[^A-Z]*/g, function(text, ch) {
             return table[key[count++ % key.length].charCodeAt() - ASCII.A][ch.charCodeAt() - ASCII.A];
         });
     };
@@ -48,7 +48,7 @@
     Vigenere.decrypt = function(key, text) {
         var count = 0;
         key = key.toUpperCase();
-        return text.toUpperCase().replace(/[\W]*(\w)[\W]*/g, function(match, ch) {
+        return text.toUpperCase().replace(/[^A-Z]*([A-Z])[^A-Z]*/g, function(match, ch) {
             var offset = ch.charCodeAt() - key[count++ % key.length].charCodeAt();
             offset >= 0 ? null : offset += TABLE_WIDTH;
             return String.fromCharCode(ASCII.A + offset);
