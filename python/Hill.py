@@ -37,8 +37,8 @@ def decrypt(matrix, words):
     count = 0
     for ch in words:
         if str.isalpha(str(ch)):
-            number = sum(matrix[count % length] * arr) % 26;
-            cipher += chr(int(str(number)[:-2]) + ord('a'))
+            number = sum(matrix[count % length] * arr) % 26
+            cipher += chr(int(round(number)) % 26 + ord('a'))
             count += 1
     return cipher
 
@@ -56,7 +56,7 @@ def check_param(matrix, words):
         quit()
     try:
         np.linalg.inv(matrix)
-    except Exception, e:
+    except Exception as e:
         print("Error: 矩阵不可逆: " + str(e))
         quit()
 
