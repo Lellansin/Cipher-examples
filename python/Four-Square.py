@@ -40,7 +40,7 @@ def generate_table(key = ''):
 def encrypt(keys, words):
     ciphertext = ''
     words = re.sub(r'[\W]', '', words).upper().replace('Q', '')
-    R, L  = generate_table(key[0]), generate_table(key[1])
+    R, L  = generate_table(keys[0]), generate_table(keys[1])
 
     for i in range(0, len(words), 2):
         digraphs = words[i:i+2]
@@ -59,7 +59,7 @@ def mangle(R, L, digraphs):
 def decrypt(keys, words):
     ciphertext = ''
     words = re.sub(r'[\W]', '', words).upper().replace('Q', '')
-    R, L = generate_table(key[0]), generate_table(key[1])
+    R, L = generate_table(keys[0]), generate_table(keys[1])
 
     for i in range(0, len(words), 2):
         digraphs = words[i:i+2]
