@@ -225,6 +225,98 @@ function trifid(text, key, period, decrypt) {
   return out;
 }
 
+// 虚无主义: Polybius 分数化后普通加法 (不取模)
+function nihilist(text, squareKey, key, decrypt) {
+  var A = 'ABCDEFGHIKLMNOPQRSTUVWXYZ';
+  var mixed = '';
+  (squareKey.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+    if (A.indexOf(ch) >= 0 && mixed.indexOf(ch) < 0) mixed += ch;
+  });
+  for (var i = 0; i < 25; i++) if (mixed.indexOf(A[i]) < 0) mixed += A[i];
+  var square = {}, inv = {};
+  for (i = 0; i < 25; i++) {
+    square[mixed[i]] = [Math.floor(i / 5) + 1, i % 5 + 1];
+    inv[(Math.floor(i / 5) + 1) * 10 + i % 5 + 1] = mixed[i];
+  }
+  var ks = [];
+  (key.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+    if (square[ch]) ks.push(square[ch]);
+  });
+  if (!decrypt) {
+    var out = [], count = 0;
+    (text.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+      if (!square[ch]) return;
+      var p = square[ch], k = ks[count++ % ks.length];
+      out.push(p[0] * 10 + p[1] + k[0] * 10 + k[1]);
+    });
+    return out.join(' ');
+  }
+  var nums = text.trim().split(/\s+/).map(Number), dec = '';
+  for (i = 0; i < nums.length; i++) {
+    var k2 = ks[i % ks.length];
+    dec += inv[nums[i] - (k2[0] * 10 + k2[1])];
+  }
+  return dec;
+}
+
+// ADFGX/ADFGVX: Polybius 分数化 + 列置换 (size=5 为 ADFGX, size=6 含数字)
+function adfgvx(text, squareKey, transKey, size, decrypt) {
+  var headers = size === 5 ? 'ADFGX' : 'ADFGVX';
+  var alpha = size === 5 ? 'ABCDEFGHIKLMNOPQRSTUVWXYZ' : 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var mixed = '', i;
+  (squareKey.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+    if (ch === 'J' && size === 5) ch = 'I';
+    if (mixed.indexOf(ch) < 0 && alpha.indexOf(ch) >= 0) mixed += ch;
+  });
+  for (i = 0; i < alpha.length; i++) if (mixed.indexOf(alpha[i]) < 0) mixed += alpha[i];
+  if (size === 6) {
+    var digits = '1234567890', letters = 'ABCDEFGHIJ';
+    for (i = 0; i < 10; i++) {
+      var pos = mixed.indexOf(letters[i]) + 1;
+      mixed = mixed.slice(0, pos) + digits[i] + mixed.slice(pos);
+    }
+  }
+  var square = {}, inv = {};
+  for (i = 0; i < mixed.length; i++) {
+    square[mixed[i]] = headers[Math.floor(i / size)] + headers[i % size];
+    inv[square[mixed[i]]] = mixed[i];
+  }
+  if (!decrypt) {
+    var chars = text.toUpperCase().match(size === 5 ? /[A-Z]/g : /[A-Z0-9]/g) || [];
+    if (size === 5) chars = chars.map(function (c) { return c === 'J' ? 'I' : c; });
+    var frac = chars.map(function (c) { return square[c]; }).join('');
+    return columnar(frac, transKey, false);
+  }
+  var f = columnar((text.toUpperCase().match(/[ADFGVX]/g) || []).join(''), transKey, true);
+  var out = '';
+  for (i = 0; i < f.length; i += 2) out += inv[f.slice(i, i + 2)];
+  return out;
+}
+
+// 跳步: 环状置换, 每隔 step 取一个字母直到取完
+function skip(text, step, decrypt) {
+  var n = text.length;
+  if (n < 2 || step % n === 0) return text;
+  var visited = [], order = [], idx = 0, i, k;
+  for (i = 0; i < n; i++) visited.push(false);
+  while (order.length < n) {
+    if (!visited[idx]) {
+      visited[idx] = true; order.push(idx);
+      idx = (idx + step) % n;
+    } else {
+      while (visited[idx]) idx = (idx + 1) % n;
+    }
+  }
+  if (!decrypt) {
+    var out = '';
+    for (k = 0; k < n; k++) out += text[order[k]];
+    return out;
+  }
+  var result = new Array(n);
+  for (k = 0; k < n; k++) result[order[k]] = text[k];
+  return result.join('');
+}
+
 // ============ 演示卡片 ============
 var demos = [
   { name: '凯撒密码 Caesar', desc: '每个字母在字母表上固定位移 shift 位，位移 13 即 ROT13。',
@@ -302,6 +394,33 @@ var demos = [
       card.append(input, key, period,
         btnRow('加密', function () { out.textContent = trifid(input.value, key.value, toInt(period.value, 5), false); }),
         btnRow('解密', function () { out.textContent = trifid(input.value, key.value, toInt(period.value, 5), true); }), out);
+    } },
+  { name: '虚无主义 Nihilist', desc: '明文与密钥各经 Polybius 方阵转为两位数，普通加法（不取模）得数字密文，可能溢出为三位数。',
+    render: function (card) {
+      var input = el('textarea'), sk = el('input'), key = el('input'), out = outBox();
+      sk.placeholder = '方阵密钥 (默认 zebras)'; sk.value = 'zebras';
+      key.placeholder = '密钥 (默认 russian)'; key.value = 'russian';
+      card.append(input, sk, key,
+        btnRow('加密', function () { out.textContent = nihilist(input.value, sk.value, key.value, false); }),
+        btnRow('解密', function () { out.textContent = nihilist(input.value, sk.value, key.value, true); }), out);
+    } },
+  { name: 'ADFGX / ADFGVX', desc: '一战德军密码：先查方阵分数化成行标+列标两个字母，再按置换密钥做列置换；6×6 版支持数字 0-9。',
+    render: function (card) {
+      var input = el('textarea'), sk = el('input'), tk = el('input'), size = el('input'), out = outBox();
+      sk.placeholder = '方阵密钥 (默认 nachtbommenwerper)'; sk.value = 'nachtbommenwerper';
+      tk.placeholder = '置换密钥 (默认 privacy)'; tk.value = 'privacy';
+      size.placeholder = '尺寸 5 或 6 (默认 6)'; size.value = '6';
+      card.append(input, sk, tk, size,
+        btnRow('加密', function () { out.textContent = adfgvx(input.value, sk.value, tk.value, toInt(size.value, 6), false); }),
+        btnRow('解密', function () { out.textContent = adfgvx(input.value, sk.value, tk.value, toInt(size.value, 6), true); }), out);
+    } },
+  { name: '跳步 Skip', desc: '从起点起每隔 step 位取一个字母，到尾部回绕继续直到取完，是一种环状置换。',
+    render: function (card) {
+      var input = el('textarea'), step = el('input'), out = outBox();
+      step.placeholder = '步长 (默认 3)'; step.value = '3';
+      card.append(input, step,
+        btnRow('加密', function () { out.textContent = skip(input.value, toInt(step.value, 3), false); }),
+        btnRow('解密', function () { out.textContent = skip(input.value, toInt(step.value, 3), true); }), out);
     } }
 ];
 
@@ -324,6 +443,7 @@ demos.forEach(function (d) {
 // ============ 算法列表（与 README 表格同步） ============
 var SRC = 'https://github.com/Lellansin/Cipher-examples/blob/master/';
 var list = [
+  ['ADFG(V)X', 'ADFGX/ADFGVX密码', null, 'python/ADFGVX.py', null],
   ['Affine cipher', '仿射密码', 'c/Affine.c', 'python/Affine.py', null],
   ['Alberti cipher', '阿尔伯蒂密码', null, null, 'javascript/Alberti.js'],
   ['AtBash', '埃特巴什密码', null, 'python/AtBash.py', null],
@@ -341,12 +461,14 @@ var list = [
   ['Keyed Caesar', '带密钥凯撒密码', null, 'python/KeyedCaesar.py', null],
   ['Morse Code', '摩斯密码', null, null, 'javascript/Morse.js'],
   ['Multiplicative', '乘法密码', null, 'python/Multiplicative.py', null],
+  ['Nihilist', '虚无主义密码', null, 'python/Nihilist.py', null],
   ['Playfair cipher', '波雷費密碼', null, 'python/Playfair.py', 'javascript/Playfair.js'],
   ['Polybius square', '波利比烏斯(棋盘密码)', 'c/Polybius.c', 'python/Polybius.py', 'javascript/Polybius.js'],
   ['Porta cipher', '波尔塔密码', null, 'python/Porta.py', 'javascript/Porta.js'],
   ['Railfence', '栅栏密码', null, 'python/Railfence.py', null],
   ['ROT-13', 'ROT-13', 'c/ROT13.c', 'python/ROT13.py', 'javascript/ROT13.js'],
   ['Scytale', '密码棒密码', null, 'python/Scytale.py', null],
+  ['Skip', '跳步密码', null, 'python/Skip.py', null],
   ['Transposition cipher', '置换密码', 'c/Transposition.c', 'python/Transposition.py', 'javascript/Transposition.js'],
   ['Trifid cipher', '三分密码', null, 'python/Trifid.py', null],
   ['Trithemius', '特里特米乌斯密码', null, 'python/Trithemius.py', null],
