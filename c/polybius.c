@@ -82,14 +82,15 @@ char * encrypt(char *table, char *words, enum TEXT_TYPE type)
 
     if (type == WITH_BLANK)
     {
-        format = "%s%-3d";
+        format = "%-3d";
     } else {
-        format = "%s%d";
+        format = "%d";
     }
 
+    int written = 0;
     for ( i = 0; count--; i++)
     {
-        sprintf(ciphertext, format, ciphertext, arr[i]);
+        written += sprintf(ciphertext + written, format, arr[i]);
     }
 
     return ciphertext;

@@ -7,38 +7,39 @@
 
 #include <stdio.h>
 #include <ctype.h>
+#include <stddef.h>
 
 char getShiftCh(char ch, int shift, char start, char end);
 
 /*
  * ROT-13
  *
- * @param char * [in]  words  要加密/解密的字符串
- * @param char * [out] result 结果保存
+ * @param char *   [in]  words       要加密/解密的字符串
+ * @param char *   [out] result      结果保存
+ * @param size_t   [in]  result_size 结果缓冲区大小
  */
-void Rotation(char *words, char *result)
+void Rotation(char *words, char *result, size_t result_size)
 {
     char *p    = words;
     int  shift = 13, i;
 
-    result[0] = '\0';
-
-    for (i = 0; *p; p++, i++)
+    for (i = 0; *p && (size_t)i < result_size - 1; p++, i++)
     {
         if (isalpha(words[i]))
         {
             if (islower(words[i]))
             {
-                sprintf(result, "%s%c", result, getShiftCh(words[i], shift, 'a', 'z'));
+                result[i] = getShiftCh(words[i], shift, 'a', 'z');
             } else
             {
-                sprintf(result, "%s%c", result, getShiftCh(words[i], shift, 'A', 'Z'));
+                result[i] = getShiftCh(words[i], shift, 'A', 'Z');
             }
         } else
         {
-            sprintf(result, "%s%c", result, words[i]);
+            result[i] = words[i];
         }
     }
+    result[i] = '\0';
 }
 
 char getShiftCh(char ch, int shift, char start, char end)
@@ -58,10 +59,10 @@ int main(int argc, char const *argv[])
     char replytext[] = "Jr PUVARFR ner abg srne.";
     char plaintext[1024], reply[1024];
 
-    Rotation(ciphertext, plaintext);
+    Rotation(ciphertext, plaintext, sizeof(plaintext));
     printf("解密: \n%s \n", plaintext);
 
-    Rotation(replytext, plaintext);
+    Rotation(replytext, plaintext, sizeof(plaintext));
     printf("解密: \n%s \n", plaintext);
 
     return 0;
