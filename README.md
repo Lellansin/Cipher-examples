@@ -10,7 +10,7 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 
 | Algorithms | name    | C      | Python  |  Javascript |
 |------------|---------|--------|---------|-------------|
-| ADFG(V)X | ... | ... | ... | ...
+| ADFG(V)X | ADFGX/ADFGVX密码 | ... | [ADFGVX.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/ADFGVX.py) | ... |
 | Affine cipher | 仿射密码 | [Affine.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Affine.c) | [Affine.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Affine.py) | ...
 | Alberti cipher | 阿尔伯蒂密码 | ... | ... | [Alberti.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Alberti.js) 
 | AMSCO | ... | ... | ... | ...
@@ -36,7 +36,7 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | Morse Code | 摩斯密码 | ... | ... | [Morse.js](https://github.com/Lellansin/Cipher-examples/blob/master/javascript/Morse.js)
 | Multiplicative | 乘法密码 | ... | [Multiplicative.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Multiplicative.py) | ... |
 | Navajo | ... | ... | ... | ...
-| Nihilist | ... | ... | ... | ...
+| Nihilist | 虚无主义密码 | ... | [Nihilist.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Nihilist.py) | ... |
 | Playfair cipher | 波雷費密碼 | ... | [Playfair.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Playfair.py) | [Playfair.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Playfair.js)
 | Pollux | ... | ... | ... | ...
 | Polybius square |波利比烏斯(棋盘密码)|[Polybius.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Polybius.c) | [Polybius.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Polybius.py) | [Polybius.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Polybius.js)
@@ -44,7 +44,7 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | Railfence | 栅栏密码 | ... | [Railfence.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Railfence.py) | ... |
 | ROT-13 | ROT-13 | [ROT13.c](https://github.com/Lellansin/cipher-examples/blob/master/c/ROT13.c)| [ROT13.py](https://github.com/Lellansin/cipher-examples/blob/master/python/ROT13.py) | [ROT13.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/ROT13.js)
 | Scytale | 密码棒密码 | ... | [Scytale.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Scytale.py) | ... |
-| Skip | ... | ... | ... | ...
+| Skip | 跳步密码 | ... | [Skip.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Skip.py) | ... |
 | Templar | ... | ... | ... | ...
 | Transposition cipher | 置换密码 | [Transposition.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Transposition.c) | [Transposition.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Transposition.py) | [Transposition.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Transposition.js)
 | Trifid cipher | 三分密码 | ... | [Trifid.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Trifid.py) | ... |
