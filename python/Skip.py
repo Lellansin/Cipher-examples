@@ -26,7 +26,11 @@ def encrypt(words, step, start=0):
         if not visited[idx]:
             visited[idx] = True
             order.append(idx)
-        idx = (idx + step) % length
+            idx = (idx + step) % length
+        else:
+            # 当前环已走完 (step 与长度有公因数), 跳到下一个未访问位置继续
+            while visited[idx]:
+                idx = (idx + 1) % length
     return ''.join(words[i] for i in order)
 
 
@@ -45,7 +49,11 @@ def decrypt(words, step, start=0):
         if not visited[idx]:
             visited[idx] = True
             order.append(idx)
-        idx = (idx + step) % length
+            idx = (idx + step) % length
+        else:
+            # 当前环已走完 (step 与长度有公因数), 跳到下一个未访问位置继续
+            while visited[idx]:
+                idx = (idx + 1) % length
 
     result = [''] * length
     for k, i in enumerate(order):
