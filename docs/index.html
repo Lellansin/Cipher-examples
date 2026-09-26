@@ -317,6 +317,74 @@ function skip(text, step, decrypt) {
   return result.join('');
 }
 
+// 恩尼格玛: 三转子 + 反射器, 含双跳步异常 (Enigma I / M3)
+var ENIGMA_ROTORS = {
+  'I':   ['EKMFLGDQVZNTOWYHXUSPAIBRCJ', 'Q'],
+  'II':  ['AJDKSIRUXBLHWTMCQGZNPYFVOE', 'E'],
+  'III': ['BDFHJLCPRTXVZNYEIWGAKMUSQO', 'V'],
+  'IV':  ['ESOVPZJAYQUIRHXLNFTGKDCMWB', 'K'],
+  'V':   ['VZBRGITYUPSDNHLXAWMJQOFECK', 'A']
+};
+var ENIGMA_REFLECTORS = {
+  'A': 'EJMZALYXVBWFCRQUONTSPIKHGD',
+  'B': 'YRUHQSLDPXNGOKMIEBFZCWVJAT',
+  'C': 'FVPJIAOYEDRZXWGCTKUQSBNMHL'
+};
+
+// rotors: 空格分隔的从左到右转子名; 机器自反, 同一设置再跑一遍即解密
+function enigma(text, rotorNames, reflector, positions, rings, plugboard) {
+  var wires = [], invs = [], turns = [], pos = [], i;
+  (rotorNames || 'I II III').trim().toUpperCase().split(/\s+/).forEach(function (name) {
+    var spec = ENIGMA_ROTORS[name];
+    if (!spec) return;
+    var w = spec[0].split('').map(function (c) { return c.charCodeAt(0) - 65; });
+    var inv = [];
+    w.forEach(function (c, idx) { inv[c] = idx; });
+    wires.push(w); invs.push(inv); turns.push(spec[1].charCodeAt(0) - 65);
+  });
+  if (!wires.length) return '';
+  var fill = function (s) {
+    s = (s || 'A').toUpperCase().replace(/[^A-Z]/g, '');
+    while (s.length < wires.length) s += 'A';
+    return s.slice(0, wires.length);
+  };
+  positions = fill(positions); rings = fill(rings);
+  for (i = 0; i < wires.length; i++) {
+    pos.push(((positions.charCodeAt(i) - 65) - (rings.charCodeAt(i) - 65) + 26) % 26);
+  }
+  var plug = {};
+  var pairs = (plugboard || '').toUpperCase().replace(/[^A-Z]/g, '');
+  for (i = 0; i + 1 < pairs.length; i += 2) {
+    var a = pairs.charCodeAt(i) - 65, b = pairs.charCodeAt(i + 1) - 65;
+    plug[a] = b; plug[b] = a;
+  }
+  var rw = ENIGMA_REFLECTORS[reflector] || ENIGMA_REFLECTORS.B;
+  var n = wires.length;
+
+  var stepFn = function () {
+    if (pos[n - 2] === turns[n - 2]) {
+      pos[n - 2] = (pos[n - 2] + 1) % 26;
+      pos[n - 3] = (pos[n - 3] + 1) % 26;
+    } else if (pos[n - 1] === turns[n - 1]) {
+      pos[n - 2] = (pos[n - 2] + 1) % 26;
+    }
+    pos[n - 1] = (pos[n - 1] + 1) % 26;
+  };
+
+  var out = '';
+  (text.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+    stepFn();
+    var code = ch.charCodeAt(0) - 65;
+    code = plug.hasOwnProperty(code) ? plug[code] : code;
+    for (i = n - 1; i >= 0; i--) code = (wires[i][(code + pos[i]) % 26] - pos[i] + 52) % 26;
+    code = rw.charCodeAt(code) - 65;
+    for (i = 0; i < n; i++) code = (invs[i][(code + pos[i]) % 26] - pos[i] + 52) % 26;
+    code = plug.hasOwnProperty(code) ? plug[code] : code;
+    out += String.fromCharCode(code + 65);
+  });
+  return out;
+}
+
 // ============ 演示卡片 ============
 var demos = [
   { name: '凯撒密码 Caesar', desc: '每个字母在字母表上固定位移 shift 位，位移 13 即 ROT13。',
@@ -421,6 +489,15 @@ var demos = [
       card.append(input, step,
         btnRow('加密', function () { out.textContent = skip(input.value, toInt(step.value, 3), false); }),
         btnRow('解密', function () { out.textContent = skip(input.value, toInt(step.value, 3), true); }), out);
+    } },
+  { name: '恩尼格玛 Enigma', desc: '二战德军转子密码机：按键先步进转子（含双跳步），电流经三转子-反射器-三转子回到灯板。机器自反，同设置再加密即解密。',
+    render: function (card) {
+      var input = el('textarea'), rotors = el('input'), pos = el('input'), plug = el('input'), out = outBox();
+      rotors.placeholder = '转子(左→右) (默认 I II III)'; rotors.value = 'I II III';
+      pos.placeholder = '起始位置 (默认 AAA)'; pos.value = 'AAA';
+      plug.placeholder = '插接板 (可选, 如 AM FI NV)';
+      card.append(input, rotors, pos, plug,
+        btnRow('加密 / 解密', function () { out.textContent = enigma(input.value, rotors.value, 'B', pos.value, 'AAA', plug.value); }), out);
     } }
 ];
 
@@ -453,6 +530,7 @@ var list = [
   ['Beaufort', '博福特密码', null, 'python/Beaufort.py', null],
   ['Bifid cipher', '二分密码', null, 'python/Bifid.py', null],
   ['Caesar', '凯撒密码', 'c/Caesar.c', 'python/Caesar.py', 'javascript/Caesar.js'],
+  ['Enigma', '恩尼格玛密码机', null, 'python/Enigma.py', null],
   ['Columnar Transposition', '列置换密码', null, 'python/ColumnarTransposition.py', null],
   ['Four-Square cipher', '四方密码', null, 'python/Four-Square.py', 'javascript/Four-Square.js'],
   ['Gronsfeld', '格朗斯菲尔德密码', null, 'python/Gronsfeld.py', null],
