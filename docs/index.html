@@ -385,6 +385,33 @@ function enigma(text, rotorNames, reflector, positions, rings, plugboard) {
   return out;
 }
 
+// 查奥密码: 左右两盘自修改代换 (Byrne 1918)
+function chaocipher(text, leftKey, rightKey, decrypt) {
+  var A = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  var keyed = function (key) {
+    var mixed = '';
+    (key.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+      if (mixed.indexOf(ch) < 0) mixed += ch;
+    });
+    for (var j = 0; j < 26; j++) if (mixed.indexOf(A[j]) < 0) mixed += A[j];
+    return mixed.split('');
+  };
+  var left = keyed(leftKey), right = keyed(rightKey);
+  var permL = function (d) { return d.slice(0, 13).concat([d[25]], d.slice(13, 25)); };
+  var permR = function (d) {
+    d = d.slice(1).concat(d.slice(0, 1));
+    return d.slice(0, 2).concat(d.slice(3, 14), [d[2]], d.slice(14));
+  };
+  var out = '';
+  (text.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+    var idx = decrypt ? left.indexOf(ch) : right.indexOf(ch);
+    out += decrypt ? right[idx] : left[idx];
+    left = permL(left);
+    right = permR(right);
+  });
+  return out;
+}
+
 // ============ 演示卡片 ============
 var demos = [
   { name: '凯撒密码 Caesar', desc: '每个字母在字母表上固定位移 shift 位，位移 13 即 ROT13。',
@@ -498,6 +525,15 @@ var demos = [
       plug.placeholder = '插接板 (可选, 如 AM FI NV)';
       card.append(input, rotors, pos, plug,
         btnRow('加密 / 解密', function () { out.textContent = enigma(input.value, rotors.value, 'B', pos.value, 'AAA', plug.value); }), out);
+    } },
+  { name: '查奥密码 Chaocipher', desc: 'Byrne 1918：左右两个字母盘自修改代换——每加密一个字母，两盘各按固定规则重排自身，字母频度被持续打乱。',
+    render: function (card) {
+      var input = el('textarea'), lk = el('input'), rk = el('input'), out = outBox();
+      lk.placeholder = '左盘密钥 (默认 swift)'; lk.value = 'swift';
+      rk.placeholder = '右盘密钥 (默认 crypton)'; rk.value = 'crypton';
+      card.append(input, lk, rk,
+        btnRow('加密', function () { out.textContent = chaocipher(input.value, lk.value, rk.value, false); }),
+        btnRow('解密', function () { out.textContent = chaocipher(input.value, lk.value, rk.value, true); }), out);
     } }
 ];
 
