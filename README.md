@@ -13,7 +13,7 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | ADFG(V)X | ADFGX/ADFGVX密码 | ... | [ADFGVX.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/ADFGVX.py) | ... |
 | Affine cipher | 仿射密码 | [Affine.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Affine.c) | [Affine.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Affine.py) | ...
 | Alberti cipher | 阿尔伯蒂密码 | ... | ... | [Alberti.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Alberti.js) 
-| AMSCO | ... | ... | ... | ...
+| AMSCO | 阿姆斯科密码 | ... | [AMSCO.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/AMSCO.py) | ... |
 | AtBash | 埃特巴什密码 | ... | [AtBash.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/AtBash.py) | ... |
 | Autokey | 自动密匙密码 | [Autokey.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Autokey.c) | ... | [Autokey.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Autokey.js) 
 | Bacon's cipher | 培根密码 | ... |[Bacon.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Bacon.py) | [Bacon.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Bacon.js) 
@@ -38,7 +38,7 @@ Zkhq l xvh d zrug, lw phdqv mxvw zkdw l fkrrvh lw wr phdq -- qhlwkhu pruh qru oh
 | Navajo | ... | ... | ... | ...
 | Nihilist | 虚无主义密码 | ... | [Nihilist.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Nihilist.py) | ... |
 | Playfair cipher | 波雷費密碼 | ... | [Playfair.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Playfair.py) | [Playfair.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Playfair.js)
-| Pollux | ... | ... | ... | ...
+| Pollux | 波卢克斯密码 | ... | [Pollux.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Pollux.py) | ... |
 | Polybius square |波利比烏斯(棋盘密码)|[Polybius.c](https://github.com/Lellansin/cipher-examples/blob/master/c/Polybius.c) | [Polybius.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Polybius.py) | [Polybius.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Polybius.js)
 | Porta cipher | 波尔塔密码 | ... | [Porta.py](https://github.com/Lellansin/cipher-examples/blob/master/python/Porta.py) | [Porta.js](https://github.com/Lellansin/cipher-examples/blob/master/javascript/Porta.js)
 | Railfence | 栅栏密码 | ... | [Railfence.py](https://github.com/Lellansin/Cipher-examples/blob/master/python/Railfence.py) | ... |
