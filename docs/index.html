@@ -412,6 +412,84 @@ function chaocipher(text, leftKey, rightKey, decrypt) {
   return out;
 }
 
+// AMSCO: 交替 1/2 字母的列置换 (ACA)
+function amsco(text, key, decrypt) {
+  key = (key || 'A').toUpperCase().replace(/[^A-Z]/g, '') || 'A';
+  var n = key.length;
+  var order = key.split('').map(function (ch, i) { return [ch, i]; })
+    .sort(function (a, b) { return a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : a[1] - b[1]; })
+    .map(function (p) { return p[1]; });
+  // 生成交替尺寸的索引网格
+  var rows = [], p = 0, r = 0, c, k;
+  while (p < text.length) {
+    var row = [];
+    for (c = 0; c < n; c++) {
+      var size = (r + c) % 2 === 0 ? 1 : 2;
+      var idxs = [];
+      for (k = 0; k < size && p < text.length; k++) idxs.push(p++);
+      row.push(idxs);
+    }
+    rows.push(row); r++;
+  }
+  var out = '';
+  if (!decrypt) {
+    order.forEach(function (col) {
+      rows.forEach(function (row) {
+        row[col].forEach(function (idx) { out += text[idx]; });
+      });
+    });
+    return out;
+  }
+  var result = new Array(text.length), read = 0;
+  order.forEach(function (col) {
+    rows.forEach(function (row) {
+      row[col].forEach(function (idx) { result[idx] = text[read++]; });
+    });
+  });
+  return result.join('');
+}
+
+// Pollux: 摩斯符号替换为数字 (ACA)
+var POLLUX_MORSE = {
+  A: '.-', B: '-...', C: '-.-.', D: '-..', E: '.', F: '..-.', G: '--.', H: '....',
+  I: '..', J: '.---', K: '-.-', L: '.-..', M: '--', N: '-.', O: '---', P: '.--.',
+  Q: '--.-', R: '.-.', S: '...', T: '-', U: '..-', V: '...-', W: '.--', X: '-..-',
+  Y: '-.--', Z: '--..', 0: '-----', 1: '.----', 2: '..---', 3: '...--', 4: '....-',
+  5: '.....', 6: '-....', 7: '--...', 8: '---..', 9: '----.'
+};
+function pollux(text, key, decrypt) {
+  key = (key || '').replace(/[^.\-x]/g, '');
+  if (key.length !== 10) key = '..--xx....';
+  var toMorse = function (t) {
+    var words = [];
+    t.toUpperCase().split(/\s+/).forEach(function (word) {
+      var codes = [];
+      (word.match(/[A-Z0-9]/g) || []).forEach(function (ch) {
+        if (POLLUX_MORSE[ch]) codes.push(POLLUX_MORSE[ch]);
+      });
+      if (codes.length) words.push(codes.join('x'));
+    });
+    return words.join('xx');
+  };
+  if (!decrypt) {
+    var m = toMorse(text), out = '';
+    for (var i = 0; i < m.length; i++) out += key.indexOf(m[i]);
+    return out;
+  }
+  var morse = '';
+  (String(text).match(/\d/g) || []).forEach(function (d) { morse += key[+d]; });
+  var out2 = '';
+  morse.split('xx').forEach(function (word) {
+    word.split('x').forEach(function (code) {
+      for (var letter in POLLUX_MORSE) {
+        if (POLLUX_MORSE[letter] === code && code) { out2 += letter; return; }
+      }
+    });
+    out2 += ' ';
+  });
+  return out2.trim();
+}
+
 // ============ 演示卡片 ============
 var demos = [
   { name: '凯撒密码 Caesar', desc: '每个字母在字母表上固定位移 shift 位，位移 13 即 ROT13。',
@@ -534,6 +612,22 @@ var demos = [
       card.append(input, lk, rk,
         btnRow('加密', function () { out.textContent = chaocipher(input.value, lk.value, rk.value, false); }),
         btnRow('解密', function () { out.textContent = chaocipher(input.value, lk.value, rk.value, true); }), out);
+    } },
+  { name: '阿姆斯科 AMSCO', desc: 'ACA 列置换变体：明文按行填入网格时单元格交替容纳 1 或 2 个字母，再按密钥字母序整列读出。',
+    render: function (card) {
+      var input = el('textarea'), key = el('input'), out = outBox();
+      key.placeholder = '密钥单词 (默认 cat)'; key.value = 'cat';
+      card.append(input, key,
+        btnRow('加密', function () { out.textContent = amsco(input.value, key.value, false); }),
+        btnRow('解密', function () { out.textContent = amsco(input.value, key.value, true); }), out);
+    } },
+  { name: '波卢克斯 Pollux', desc: '摩斯超加密：明文先转摩斯电码（字母间 x、单词间 xx），每个点/划/分隔符按 10 位密钥替换为一个数字。',
+    render: function (card) {
+      var input = el('textarea'), key = el('input'), out = outBox();
+      key.placeholder = "密钥: 10 位 .-x (默认 ..--xx....)"; key.value = '..--xx....';
+      card.append(input, key,
+        btnRow('加密', function () { out.textContent = pollux(input.value, key.value, false); }),
+        btnRow('解密', function () { out.textContent = pollux(input.value, key.value, true); }), out);
     } }
 ];
 
