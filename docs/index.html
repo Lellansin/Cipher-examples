@@ -152,34 +152,104 @@
     padding: 28px 16px 40px; border-top: 1px solid var(--border); margin-top: 48px;
   }
 
+  /* ---------- top nav ---------- */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; gap: 14px;
+    padding: 10px 20px;
+    background: rgba(7, 11, 20, .82);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav .brand {
+    font-weight: 800; font-size: 15px; white-space: nowrap;
+    background: var(--gradient); -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .nav .chips { display: flex; gap: 4px; flex: 1; flex-wrap: wrap; }
+  .nav .chip {
+    font-size: 13px; color: var(--muted); text-decoration: none;
+    padding: 5px 12px; border-radius: 999px; border: 1px solid transparent;
+    transition: all .15s ease; white-space: nowrap;
+  }
+  .nav .chip:hover { color: var(--text); border-color: var(--border); background: rgba(255,255,255,.04); }
+  .nav select {
+    background: var(--panel-solid); color: var(--text);
+    border: 1px solid var(--border); border-radius: 999px;
+    padding: 5px 12px; font-size: 13px; font-family: inherit; max-width: 190px; cursor: pointer;
+  }
+
+  /* ---------- card head / source pills ---------- */
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 6px; }
+  .card-head h3 { font-size: 15.5px; }
+  .srcs { display: flex; gap: 5px; flex-shrink: 0; }
+  .srcs a {
+    font-size: 11px; color: var(--muted); text-decoration: none;
+    border: 1px solid var(--border); border-radius: 6px; padding: 1px 8px;
+    transition: all .15s ease;
+  }
+  .srcs a:hover { color: var(--accent-2); border-color: rgba(34, 211, 238, .5); }
+
+  /* ---------- anchors / flash ---------- */
+  section, .card { scroll-margin-top: 70px; }
+  @keyframes flash {
+    0% { box-shadow: 0 0 0 3px rgba(34, 211, 238, .75); border-color: #22d3ee; }
+    100% { box-shadow: 0 8px 30px rgba(99, 102, 241, .12); }
+  }
+  .card.flash { animation: flash 1.4s ease; }
+
   @media (max-width: 640px) {
     .hero { padding: 52px 16px 32px; }
     th, td { padding: 9px 10px; }
+    .nav .chips { display: none; }
   }
 </style>
 </head>
 <body>
+<nav class="nav">
+  <span class="brand">🔐 常见加密算法</span>
+  <div class="chips">
+    <a class="chip" href="#cat-classic">替换加密</a>
+    <a class="chip" href="#cat-trans">置换与栅栏</a>
+    <a class="chip" href="#cat-frac">分数化与混合</a>
+    <a class="chip" href="#cat-machine">机械与代码</a>
+    <a class="chip" href="#list-section">算法列表</a>
+  </div>
+  <select id="jump"><option value="">跳转到算法…</option></select>
+  <a class="chip" href="https://github.com/Lellansin/Cipher-examples">GitHub ↗</a>
+</nav>
 <div class="hero">
   <h1>常见加密算法</h1>
-  <p>经典密码学算法的多语言示例集合，附可交互的在线演示</p>
+  <p>每个示例都已预填好输入并自动演示：直接改文字、点按钮即可看到加密前后的效果</p>
   <div class="badges">
     <span class="badge"><b>45+</b> 已实现算法</span>
     <span class="badge"><b>20</b> 个在线示例</span>
     <span class="badge">Python · C · JavaScript · Erlang</span>
   </div>
-  <div class="actions">
-    <a class="btn primary" href="#demos">开始试玩</a>
-    <a class="btn" href="https://github.com/Lellansin/Cipher-examples">GitHub 仓库</a>
-  </div>
 </div>
 <main>
 
-<section>
-  <div class="section-head"><h2>在线示例</h2><span class="hint">与仓库实现逻辑一致 · 加密后再解密即可还原明文</span></div>
-  <div class="grid" id="demos"></div>
+<section id="cat-classic">
+  <div class="section-head"><h2>替换加密</h2><span class="hint">把每个字母按规则替换成另一个字母</span></div>
+  <div class="grid" id="g-classic"></div>
 </section>
 
-<section>
+<section id="cat-trans">
+  <div class="section-head"><h2>置换与栅栏</h2><span class="hint">字母不变，打乱它们的位置</span></div>
+  <div class="grid" id="g-trans"></div>
+</section>
+
+<section id="cat-frac">
+  <div class="section-head"><h2>分数化与混合</h2><span class="hint">先把字母拆成坐标/数字，再重新组合</span></div>
+  <div class="grid" id="g-frac"></div>
+</section>
+
+<section id="cat-machine">
+  <div class="section-head"><h2>机械与代码</h2><span class="hint">转轮密码机与历史上的代码体系</span></div>
+  <div class="grid" id="g-machine"></div>
+</section>
+
+<section id="list-section">
   <div class="section-head"><h2>算法实现列表</h2><span class="hint">点击文件名跳转源码</span></div>
   <div class="toolbar"><input id="search" type="text" placeholder="搜索算法，如 enigma / 栅栏 / 维吉尼亚 …"></div>
   <div class="table-wrap">
@@ -852,11 +922,94 @@ function btnRow(label, fn) {
   b.textContent = label; b.onclick = function () { fn(b); };
   wrap.append(b); return wrap;
 }
-var root = document.getElementById('demos');
+
+// 每张卡片的元数据: 所属分组 / 预填示例输入 / 各语言源码链接
+var demoMeta = {
+  '凯撒密码 Caesar':          { cat: 'classic', sample: 'hello world',                srcs: ['python/Caesar.py', 'javascript/Caesar.js', 'c/Caesar.c'] },
+  'ROT13':                    { cat: 'classic', sample: 'hello world',                srcs: ['python/ROT13.py', 'javascript/ROT13.js', 'c/ROT13.c'] },
+  '埃特巴什 Atbash':          { cat: 'classic', sample: 'atbash cipher example',      srcs: ['python/AtBash.py'] },
+  '维吉尼亚 Vigenère':        { cat: 'classic', sample: 'attack at dawn',             srcs: ['python/Vigenere.py', 'javascript/Vigenere.js', 'c/Vigenere.c'] },
+  '带密钥凯撒 Keyed Caesar':  { cat: 'classic', sample: 'hello world',                srcs: ['python/KeyedCaesar.py'] },
+  '特里特米乌斯 Trithemius':  { cat: 'classic', sample: 'hello world',                srcs: ['python/Trithemius.py'] },
+  '乘法密码 Multiplicative':  { cat: 'classic', sample: 'hello world',                srcs: ['python/Multiplicative.py'] },
+  '查奥密码 Chaocipher':      { cat: 'classic', sample: 'the quick brown fox',        srcs: ['python/Chaocipher.py'] },
+  '同音替换 Homophonic':      { cat: 'classic', sample: 'the letter e appears often', srcs: ['python/Homophonic.py'] },
+  '栅栏密码 Rail Fence':      { cat: 'trans',   sample: 'WEAREDISCOVEREDFLEEATONCE',  srcs: ['python/Railfence.py'] },
+  '密码棒 Scytale':           { cat: 'trans',   sample: 'meet us at the park today',  srcs: ['python/Scytale.py'] },
+  '列置换 Columnar':          { cat: 'trans',   sample: 'this is wikipedia',          srcs: ['python/ColumnarTransposition.py'] },
+  '跳步 Skip':                { cat: 'trans',   sample: 'helloworld',                 srcs: ['python/Skip.py'] },
+  '阿姆斯科 AMSCO':           { cat: 'trans',   sample: 'hello world',                srcs: ['python/AMSCO.py'] },
+  '三分密码 Trifid':          { cat: 'frac',    sample: 'aide toi le ciel taidera',   srcs: ['python/Trifid.py'] },
+  '虚无主义 Nihilist':        { cat: 'frac',    sample: 'dynamite winter palace',     srcs: ['python/Nihilist.py'] },
+  'ADFGX / ADFGVX':           { cat: 'frac',    sample: 'attack at 1200am',           srcs: ['python/ADFGVX.py'] },
+  '波卢克斯 Pollux':          { cat: 'frac',    sample: 'sos wave',                   srcs: ['python/Pollux.py'] },
+  '恩尼格玛 Enigma':          { cat: 'machine', sample: 'attack at dawn',             srcs: ['python/Enigma.py'] },
+  '纳瓦霍代码 Navajo':        { cat: 'machine', sample: 'navajo code',                srcs: ['python/Navajo.py'] }
+};
+
+var CATS = [
+  { id: 'classic', name: '替换加密' },
+  { id: 'trans',   name: '置换与栅栏' },
+  { id: 'frac',    name: '分数化与混合' },
+  { id: 'machine', name: '机械与代码' }
+];
+var containers = {};
+CATS.forEach(function (cat) { containers[cat.id] = document.getElementById('g-' + cat.id); });
+
+var SRC_BASE = 'https://github.com/Lellansin/Cipher-examples/blob/master/';
+var EXT_LABEL = { py: 'Python', c: 'C', js: 'JS', erl: 'Erlang' };
+var jump = document.getElementById('jump');
+
 demos.forEach(function (d) {
-  var card = el('div', 'card'), h = el('h3'), p = el('div', 'desc');
-  h.textContent = d.name; p.textContent = d.desc;
-  card.append(h, p); d.render(card); root.append(card);
+  var meta = demoMeta[d.name] || { cat: 'classic', sample: 'hello world', srcs: [] };
+
+  var card = el('div', 'card');
+  card.id = 'demo-' + d.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+  // 卡片头: 标题 + 各语言源码直达链接
+  var head = el('div', 'card-head');
+  var h = el('h3'); h.textContent = d.name; head.append(h);
+  var srcs = el('div', 'srcs');
+  (meta.srcs || []).forEach(function (path) {
+    var a = document.createElement('a');
+    a.href = SRC_BASE + path; a.target = '_blank'; a.title = path;
+    a.textContent = EXT_LABEL[path.split('.').pop()] || path;
+    srcs.append(a);
+  });
+  head.append(srcs);
+
+  var p = el('div', 'desc'); p.textContent = d.desc;
+  card.append(head, p);
+
+  // 渲染交互控件 (函数体与仓库实现逻辑一致)
+  d.render(card);
+
+  // 预填示例输入
+  var ta = card.querySelector('textarea');
+  if (ta && meta.sample) ta.value = meta.sample;
+
+  containers[meta.cat].append(card);
+
+  // 页面加载即自动演示第一颗按钮, 卡片自带示例结果
+  var firstBtn = card.querySelector('button');
+  if (firstBtn) firstBtn.click();
+
+  // 填充"跳转到算法"下拉
+  var opt = document.createElement('option');
+  opt.value = card.id; opt.textContent = d.name;
+  jump.append(opt);
+});
+
+// 下拉跳转 + 高亮定位
+document.getElementById('jump').addEventListener('change', function () {
+  if (!this.value) return;
+  var card = document.getElementById(this.value);
+  if (!card) return;
+  card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  card.classList.remove('flash');
+  void card.offsetWidth;
+  card.classList.add('flash');
+  this.value = '';
 });
 
 // ============ 算法列表（与 README 表格同步） ============
