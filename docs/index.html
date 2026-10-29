@@ -3,55 +3,195 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>常见加密算法 - Cipher Examples</title>
+<meta name="description" content="经典密码学算法的多语言示例集合与在线演示：凯撒、维吉尼亚、Enigma、栅栏、查奥密码等 20 个可交互示例。">
+<title>常见加密算法 · Cipher Examples</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%F0%9F%94%90%3C/text%3E%3C/svg%3E">
 <style>
+  :root {
+    --bg: #070b14;
+    --panel: rgba(17, 24, 39, .55);
+    --panel-solid: #0d1424;
+    --border: rgba(148, 163, 184, .14);
+    --text: #e2e8f0;
+    --muted: #94a3b8;
+    --accent: #818cf8;
+    --accent-2: #22d3ee;
+    --gradient: linear-gradient(135deg, #818cf8, #22d3ee);
+  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; background: #f5f7fa; color: #2c3e50; line-height: 1.6; }
-  header { background: #2c3e50; color: #fff; padding: 24px 16px; text-align: center; }
-  header h1 { font-size: 26px; margin-bottom: 4px; }
-  header p { opacity: .8; font-size: 14px; }
-  header a { color: #7fdbff; }
-  main { max-width: 960px; margin: 0 auto; padding: 24px 16px 48px; }
-  h2 { margin: 28px 0 12px; padding-left: 10px; border-left: 4px solid #3498db; font-size: 20px; }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 16px; }
-  .card { background: #fff; border-radius: 8px; padding: 16px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
-  .card h3 { font-size: 16px; margin-bottom: 6px; color: #2c3e50; }
-  .card .desc { font-size: 13px; color: #666; margin-bottom: 10px; }
-  .card textarea, .card input { width: 100%; padding: 6px 8px; border: 1px solid #d0d7de; border-radius: 6px; font-size: 14px; margin-bottom: 8px; font-family: inherit; }
-  .card textarea { height: 56px; resize: vertical; }
-  .card .row { display: flex; gap: 8px; align-items: center; }
-  .card button { flex: 1; padding: 6px 0; border: none; border-radius: 6px; background: #3498db; color: #fff; cursor: pointer; font-size: 14px; }
-  .card button:hover { background: #2f81c9; }
-  .card .out { margin-top: 8px; padding: 8px; background: #f0f6fc; border-radius: 6px; font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 13px; word-break: break-all; min-height: 34px; }
-  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.08); font-size: 14px; }
-  th, td { padding: 8px 12px; border-bottom: 1px solid #eef1f4; text-align: left; }
-  th { background: #eef3f8; }
-  tr:last-child td { border-bottom: none; }
-  td a { color: #0969da; text-decoration: none; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    background:
+      radial-gradient(900px 480px at 15% -8%, rgba(99, 102, 241, .18), transparent 60%),
+      radial-gradient(800px 420px at 85% -5%, rgba(34, 211, 238, .12), transparent 60%),
+      var(--bg);
+    color: var(--text);
+    line-height: 1.65;
+  }
+  ::selection { background: rgba(129, 140, 248, .35); }
+  a { color: var(--accent-2); }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 72px 20px 44px; text-align: center; }
+  .hero h1 {
+    font-size: clamp(30px, 5vw, 44px);
+    font-weight: 800;
+    letter-spacing: .5px;
+    background: var(--gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .hero p { color: var(--muted); margin-top: 10px; font-size: 15px; }
+  .hero .actions { margin-top: 22px; display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .btn {
+    display: inline-block; padding: 9px 20px; border-radius: 999px;
+    font-size: 14px; text-decoration: none; border: 1px solid var(--border);
+    color: var(--text); transition: all .2s ease;
+  }
+  .btn:hover { border-color: rgba(129, 140, 248, .6); transform: translateY(-1px); }
+  .btn.primary { background: var(--gradient); border: none; color: #0a0e1a; font-weight: 700; }
+  .badges { margin-top: 18px; display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+  .badge {
+    font-size: 12.5px; color: var(--muted); padding: 5px 13px;
+    border: 1px solid var(--border); border-radius: 999px; background: rgba(255,255,255,.03);
+  }
+  .badge b { color: var(--text); }
+
+  /* ---------- layout ---------- */
+  main { max-width: 1100px; margin: 0 auto; padding: 24px 20px 60px; }
+  section { margin-top: 40px; }
+  .section-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .section-head::before {
+    content: ''; width: 4px; height: 20px; border-radius: 2px;
+    background: var(--gradient);
+  }
+  .section-head h2 { font-size: 21px; font-weight: 700; }
+  .section-head .hint { color: var(--muted); font-size: 13px; }
+
+  /* ---------- demo grid ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+  }
+  .card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(129, 140, 248, .45);
+    box-shadow: 0 8px 30px rgba(99, 102, 241, .12);
+  }
+  .card h3 { font-size: 15.5px; margin-bottom: 6px; }
+  .card .desc { font-size: 12.5px; color: var(--muted); margin-bottom: 12px; line-height: 1.6; }
+  .card textarea, .card input {
+    width: 100%; padding: 8px 10px; margin-bottom: 8px;
+    background: var(--panel-solid); border: 1px solid var(--border);
+    border-radius: 9px; color: var(--text); font-size: 13.5px; font-family: inherit;
+    transition: border-color .15s ease, box-shadow .15s ease;
+  }
+  .card textarea { height: 54px; resize: vertical; }
+  .card textarea:focus, .card input:focus {
+    outline: none; border-color: rgba(129, 140, 248, .65);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .18);
+  }
+  .card textarea::placeholder, .card input::placeholder { color: #475569; }
+  .card .row { display: flex; gap: 8px; }
+  .card button {
+    flex: 1; padding: 8px 0; border: none; border-radius: 9px;
+    background: var(--gradient); color: #0a0e1a; font-weight: 700;
+    font-size: 13.5px; cursor: pointer; transition: filter .15s ease, transform .15s ease;
+  }
+  .card button:hover { filter: brightness(1.12); }
+  .card button:active { transform: scale(.98); }
+  .card .out {
+    margin-top: 10px; padding: 9px 11px; min-height: 38px;
+    background: var(--panel-solid); border: 1px solid var(--border); border-radius: 9px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px; color: #a5f3fc; word-break: break-all;
+  }
+
+  /* ---------- table ---------- */
+  .toolbar { display: flex; gap: 10px; margin-bottom: 12px; }
+  .toolbar input {
+    flex: 1; max-width: 340px; padding: 9px 14px;
+    background: var(--panel-solid); border: 1px solid var(--border);
+    border-radius: 999px; color: var(--text); font-size: 14px; font-family: inherit;
+  }
+  .toolbar input:focus {
+    outline: none; border-color: rgba(129, 140, 248, .65);
+    box-shadow: 0 0 0 3px rgba(99, 102, 241, .18);
+  }
+  .toolbar input::placeholder { color: #475569; }
+  .table-wrap {
+    border: 1px solid var(--border); border-radius: 14px; overflow: auto;
+    background: var(--panel);
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { padding: 10px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+  th {
+    font-size: 12px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--muted); background: rgba(13, 20, 36, .9);
+  }
+  tbody tr { transition: background .12s ease; }
+  tbody tr:hover { background: rgba(99, 102, 241, .07); }
+  tbody tr:last-child td { border-bottom: none; }
+  td a { color: var(--accent-2); text-decoration: none; }
   td a:hover { text-decoration: underline; }
-  .todo { color: #b0b8c1; }
-  footer { text-align: center; color: #99a3ad; font-size: 13px; padding: 16px; }
+  td b { font-weight: 600; }
+  .todo {
+    display: inline-block; font-size: 11.5px; color: #64748b;
+    border: 1px solid var(--border); border-radius: 999px; padding: 1px 9px;
+  }
+
+  /* ---------- footer ---------- */
+  footer {
+    text-align: center; color: var(--muted); font-size: 13px;
+    padding: 28px 16px 40px; border-top: 1px solid var(--border); margin-top: 48px;
+  }
+
+  @media (max-width: 640px) {
+    .hero { padding: 52px 16px 32px; }
+    th, td { padding: 9px 10px; }
+  }
 </style>
 </head>
 <body>
-<header>
+<div class="hero">
   <h1>常见加密算法</h1>
-  <p>经典密码学算法的多语言示例集合 · <a href="https://github.com/Lellansin/Cipher-examples">GitHub 仓库</a></p>
-</header>
+  <p>经典密码学算法的多语言示例集合，附可交互的在线演示</p>
+  <div class="badges">
+    <span class="badge"><b>45+</b> 已实现算法</span>
+    <span class="badge"><b>20</b> 个在线示例</span>
+    <span class="badge">Python · C · JavaScript · Erlang</span>
+  </div>
+  <div class="actions">
+    <a class="btn primary" href="#demos">开始试玩</a>
+    <a class="btn" href="https://github.com/Lellansin/Cipher-examples">GitHub 仓库</a>
+  </div>
+</div>
 <main>
 
-<h2>在线示例</h2>
-<p style="margin-bottom:12px; color:#666; font-size:14px;">以下演示与仓库中的实现逻辑一致，可直接试玩。加密后再解密即可还原明文。</p>
-<div class="grid" id="demos"></div>
+<section>
+  <div class="section-head"><h2>在线示例</h2><span class="hint">与仓库实现逻辑一致 · 加密后再解密即可还原明文</span></div>
+  <div class="grid" id="demos"></div>
+</section>
 
-<h2>算法实现列表</h2>
-<table>
-  <thead><tr><th>Algorithm</th><th>名称</th><th>C</th><th>Python</th><th>Javascript</th></tr></thead>
-  <tbody id="list"></tbody>
-</table>
+<section>
+  <div class="section-head"><h2>算法实现列表</h2><span class="hint">点击文件名跳转源码</span></div>
+  <div class="toolbar"><input id="search" type="text" placeholder="搜索算法，如 enigma / 栅栏 / 维吉尼亚 …"></div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Algorithm</th><th>名称</th><th>C</th><th>Python</th><th>Javascript</th></tr></thead>
+      <tbody id="list"></tbody>
+    </table>
+  </div>
+</section>
 
 </main>
-<footer>Cipher-examples · 持续迭代中 · 由定时任务每周六自动维护</footer>
+<footer>Cipher-examples · 由定时任务每周六自动维护 · <a href="https://github.com/Lellansin/Cipher-examples">GitHub</a></footer>
 
 <script>
 // ============ 算法实现（与仓库各语言示例逻辑一致） ============
@@ -766,6 +906,16 @@ list.forEach(function (row) {
   tr.innerHTML = '<td><b>' + cells[0] + '</b></td><td>' + cells[1] + '</td><td>' + cells[2] + '</td><td>' + cells[3] + '</td><td>' + cells[4] + '</td>';
   tbody.append(tr);
 });
+</script>
+<script>
+  // 列表搜索过滤
+  var searchBox = document.getElementById('search');
+  searchBox.addEventListener('input', function () {
+    var q = this.value.trim().toUpperCase();
+    document.querySelectorAll('#list tr').forEach(function (row) {
+      row.style.display = row.textContent.toUpperCase().indexOf(q) >= 0 ? '' : 'none';
+    });
+  });
 </script>
 </body>
 </html>
