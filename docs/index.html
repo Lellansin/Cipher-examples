@@ -490,6 +490,64 @@ function pollux(text, key, decrypt) {
   return out2.trim();
 }
 
+// 同音替换: 高频字母对应更多数字符号 (确定性轮换)
+var HOMOPHONIC_FREQ = {
+  E: 12, T: 9, A: 8, O: 8, I: 8, N: 7, S: 6, H: 6, R: 6, D: 4, L: 4,
+  C: 3, U: 3, M: 3, W: 2, F: 2, G: 2, Y: 2, P: 2, B: 1, V: 1, K: 1,
+  J: 1, X: 1, Q: 1, Z: 1
+};
+function homophonic(text, decrypt) {
+  var table = {}, symbol = 0, letter;
+  for (letter in HOMOPHONIC_FREQ) {
+    table[letter] = [];
+    for (var j = 0; j < HOMOPHONIC_FREQ[letter]; j++) table[letter].push(symbol++);
+  }
+  var reverse = {};
+  Object.keys(table).forEach(function (l) {
+    table[l].forEach(function (s) { reverse[s] = l; });
+  });
+  if (!decrypt) {
+    var counters = {}, out = [];
+    (text.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+      var syms = table[ch];
+      counters[ch] = counters[ch] || 0;
+      out.push(syms[counters[ch]++ % syms.length]);
+    });
+    return out.join(' ');
+  }
+  var dec = '';
+  text.trim().split(/\s+/).forEach(function (token) {
+    if (/^\d+$/.test(token)) dec += reverse[+token] || '?';
+  });
+  return dec;
+}
+
+// 纳瓦霍代码: 字母 -> 纳瓦霍语单词 (1942 美军历史代码表)
+var NAVAJO_ALPHABET = {
+  A: 'WOL-LA-CHEE', B: 'SHUSH', C: 'MOASI', D: 'BE', E: 'DZEH', F: 'CHUO',
+  G: 'KLIZZIE', H: 'LIN', I: 'TKIN', J: 'TKELE-CHO-GI', K: 'KLIZZIE-YAZZIE',
+  L: 'DIBEH-YAZZIE', M: 'BE-TAS-TE', N: 'NESH-CHEE', O: 'NE-ASH-JE',
+  P: 'BI-SODIH', Q: 'CA-YEIL', R: 'GAH', S: 'DIBEH', T: 'THAN-ZIE',
+  U: 'SHI-DA', V: 'A-KEH-DI-GLIN', W: 'GLOE-IH', X: 'AL-NA-AS-DZOH',
+  Y: 'TSAH-AS-ZIH', Z: 'BESH-DO-TLIZ'
+};
+function navajo(text, decrypt) {
+  var reverse = {};
+  Object.keys(NAVAJO_ALPHABET).forEach(function (l) { reverse[NAVAJO_ALPHABET[l]] = l; });
+  if (!decrypt) {
+    var out = [];
+    (text.toUpperCase().match(/[A-Z]/g) || []).forEach(function (ch) {
+      out.push(NAVAJO_ALPHABET[ch]);
+    });
+    return out.join(' ');
+  }
+  var dec = '';
+  text.trim().split(/\s+/).forEach(function (token) {
+    dec += reverse[token] || '?';
+  });
+  return dec;
+}
+
 // ============ 演示卡片 ============
 var demos = [
   { name: '凯撒密码 Caesar', desc: '每个字母在字母表上固定位移 shift 位，位移 13 即 ROT13。',
@@ -628,6 +686,20 @@ var demos = [
       card.append(input, key,
         btnRow('加密', function () { out.textContent = pollux(input.value, key.value, false); }),
         btnRow('解密', function () { out.textContent = pollux(input.value, key.value, true); }), out);
+    } },
+  { name: '同音替换 Homophonic', desc: '高频字母对应更多数字符号（E 有 12 个、Z 只有 1 个），使密文频率趋近均匀以对抗频率分析；同字母逐次轮换符号。',
+    render: function (card) {
+      var input = el('textarea'), out = outBox();
+      card.append(input,
+        btnRow('加密', function () { out.textContent = homophonic(input.value, false); }),
+        btnRow('解密', function () { out.textContent = homophonic(input.value, true); }), out);
+    } },
+  { name: '纳瓦霍代码 Navajo', desc: '二战美军纳瓦霍 Code Talkers：每个字母用纳瓦霍语单词拼读（A = WOL-LA-CHEE 蚂蚁）。严格说是代码而非密码。',
+    render: function (card) {
+      var input = el('textarea'), out = outBox();
+      card.append(input,
+        btnRow('加密', function () { out.textContent = navajo(input.value, false); }),
+        btnRow('解密', function () { out.textContent = navajo(input.value, true); }), out);
     } }
 ];
 
@@ -665,10 +737,12 @@ var list = [
   ['Four-Square cipher', '四方密码', null, 'python/Four-Square.py', 'javascript/Four-Square.js'],
   ['Gronsfeld', '格朗斯菲尔德密码', null, 'python/Gronsfeld.py', null],
   ['Hill cipher', '希尔密码', null, 'python/Hill.py', null],
+  ['Homophonic', '同音替换密码', null, 'python/Homophonic.py', null],
   ['Kamasutra cipher', '欲经密码', null, 'python/Kamasutra.py', 'javascript/Kamasutra.js'],
   ['Keyed Caesar', '带密钥凯撒密码', null, 'python/KeyedCaesar.py', null],
   ['Morse Code', '摩斯密码', null, null, 'javascript/Morse.js'],
   ['Multiplicative', '乘法密码', null, 'python/Multiplicative.py', null],
+  ['Navajo', '纳瓦霍密码(代码)', null, 'python/Navajo.py', null],
   ['Nihilist', '虚无主义密码', null, 'python/Nihilist.py', null],
   ['Playfair cipher', '波雷費密碼', null, 'python/Playfair.py', 'javascript/Playfair.js'],
   ['Polybius square', '波利比烏斯(棋盘密码)', 'c/Polybius.c', 'python/Polybius.py', 'javascript/Polybius.js'],
